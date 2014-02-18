@@ -1,0 +1,21 @@
+/* Add some padding at the top, so our page isn't hidden by the navbar */
+body {
+  padding-top: 70px;
+}
+
+@import "compass/css3/images";
+.backdrop {
+  @include background(url('/images/background.png') no-repeat);
+  position: fixed;
+  top: 50px;
+  height: 100%;
+  width: 1140px;
+}
+
+/* Prevent flicker when the app is starting by not showing cloaked items */
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+@import "alerts/style";
+@import "alerts/animations";

@@ -1,0 +1,80 @@
+<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="navbarCtrl">
+  <div class="container">
+    <!--When our view is too small, all the menus and things collapse down to this button-->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">hMedia</a>
+    </div><!--/.navbar-header-->
+
+    <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed=true">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle">Themes <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="style in styles"><a ng-click="changeStyle(style)">{{style}}</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!--User is signed in, show menu-->
+      <div ng-show="isSignedIn()">
+        <ul class="nav navbar-nav">
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle">View Library <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/creators">by Creator</a></li>
+              <li><a href="/collections">by Collection</a></li>
+              <li><a href="/media">by Media</a></li>
+              <li class="divider"></li>
+              <li class="dropdown-header">Admin</li>
+              <li><a href="/archives">by Archive</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a class="btn btn-link" href="/settings">{{currentUser()}}</a></li>
+          <li><a class="btn btn-link" ng-click="logout()">Sign out</a></li>
+        </ul>
+      </div><!--/.ng-switch-when-->
+
+      <!--User is not signed in, show sign in controls-->
+      <div ng-hide="isSignedIn()">
+        <form class="navbar-form navbar-right" name="loginForm">
+          <div class="form-group">
+            <input type="email"
+                   name="email"
+                   class="form-control input-sm"
+                   placeholder="Email"
+                   ng-model="user.email"
+                   ng-disabled="isProcessing"
+                   required>
+          </div>
+          <div class="form-group">
+            <input type="password"
+                   name="password"
+                   class="form-control input-sm"
+                   placeholder="Password"
+                   ng-model="user.password"
+                   ng-disabled="isProcessing"
+                   required>
+          </div>
+          <button type="submit"
+                  class="btn btn-sm btn-success"
+                  ng-click="login('local', loginForm)"
+                  ng-disabled="isProcessing || !loginForm.$valid">Log in</button>
+          <button type="button"
+                  class="btn btn-sm btn-link"
+                  ng-click="createAccount('local', loginForm)"
+                  ng-disabled="isProcessing || !loginForm.$valid">Join</button>
+        </form><!--/.navbar-form-->
+      </div><!--/.ng-switch-default-->
+
+    </div><!--/.navbar-collapse-->
+  </div>
+</div><!--/.navbar-->
