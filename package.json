@@ -11,7 +11,8 @@
     "passport-local": "latest",
     "ejs": "~0.8.4",
     "Faker": "^0.7.0",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "coffee-script": "^1.7.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
