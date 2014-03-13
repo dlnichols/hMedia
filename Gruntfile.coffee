@@ -7,6 +7,8 @@
 # use this if you want to recursively match all subfolders:
 # 'test/spec/**/*.js'
 module.exports = (grunt) ->
+  # Read and interpret CoffeeScript
+  require('coffee-script')
 
   # Load grunt tasks automatically
   require('load-grunt-tasks') grunt
