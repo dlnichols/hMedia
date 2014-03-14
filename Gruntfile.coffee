@@ -7,9 +7,6 @@
 # use this if you want to recursively match all subfolders:
 # 'test/spec/**/*.js'
 module.exports = (grunt) ->
-  # Read and interpret CoffeeScript
-  require('coffee-script')
-
   # Load grunt tasks automatically
   require('load-grunt-tasks') grunt
 
@@ -26,6 +23,7 @@ module.exports = (grunt) ->
 
     express:
       options:
+        cmd: "coffee"
         port: process.env.PORT or 9000
 
       dev:
@@ -53,7 +51,6 @@ module.exports = (grunt) ->
         files: ['test/spec/{,*/}*.js']
         tasks: [
           'newer:jshint:test'
-          'karma'
         ]
 
       compass:
@@ -208,12 +205,13 @@ module.exports = (grunt) ->
     # The following *-min tasks produce minified files in the dist folder
     imagemin:
       dist:
-        files: [
-          expand: true
-          cwd: '<%= yeoman.app %>/images'
-          src: '{,*/}*.{png,jpg,jpeg,gif}'
-          dest: '<%= yeoman.dist %>/public/images'
-        ]
+        dynamic:
+          files: [
+            expand: true
+            cwd: '<%= yeoman.app %>/images'
+            src: '{,*/}*.{png,jpg,jpeg,gif}'
+            dest: '<%= yeoman.dist %>/public/images'
+          ]
 
     svgmin:
       dist:
@@ -252,11 +250,6 @@ module.exports = (grunt) ->
           src: 'application.js'
           dest: '.tmp/concat/scripts'
         ]
-
-    # Replace Google CDN references
-    cdnify:
-      dist:
-        html: ['<%= yeoman.dist %>/public/*.html']
 
     # Copies remaining files to places other tasks can use
     copy:
@@ -353,7 +346,6 @@ module.exports = (grunt) ->
   grunt.registerTask 'test', [
     'clean:server'
     'concurrent:test'
-    'karma'
   ]
   grunt.registerTask 'build', [
     'clean:dist'
@@ -363,7 +355,6 @@ module.exports = (grunt) ->
     'ngmin'
     'cssmin'
     'copy:dist'
-    'cdnify'
     'rev'
     'usemin'
   ]

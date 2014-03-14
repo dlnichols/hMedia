@@ -7,3 +7,4 @@ Tasks for v0.0.1 (Silly Skeleton)
 * Fix README and TODO partials to read/translate their respective markdown
   files
 * Add timeout (5? 15s?) to notifications
+* STUFF
