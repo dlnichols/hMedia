@@ -8,3 +8,4 @@ Tasks for v0.0.1 (Silly Skeleton)
   files
 * Add timeout (5? 15s?) to notifications
 * STUFF
+* Create validators (instead of defining in the model)

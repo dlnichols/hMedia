@@ -1,41 +1,46 @@
+###
+# Our server application
+# #
+# Nothing too special here, a quick ExpressJS app that serves a single page
+# AngularJS app.  In production all it will handle is the single page app, 
+###
 'use strict'
-express  = require('express')
-path     = require('path')
+
+# Register the coffee interpreter
+require 'coffee-script/register'
+
+# External libs
 fs       = require('fs')
+path     = require('path')
+express  = require('express')
 mongoose = require('mongoose')
 
 ###
-Main application file
+# Main application file
 ###
 
-# Set default node environment to development
-process.env.NODE_ENV = process.env.NODE_ENV or 'development'
-
-# Application Config
-config = require('./lib/config/main')
+# Load the environment
+env = require('./lib/config/environment')
 
 # Connect to database
-db = mongoose.connect(config.mongo.uri, config.mongo.options)
+db = mongoose.connect(env.mongo.uri, env.mongo.options)
 
 # Bootstrap models
-modelsPath = path.join(__dirname, 'lib/models')
-fs.readdirSync(modelsPath).forEach (file) ->
-  require modelsPath + '/' + file  if /(.*)\.(js$|coffee$)/.test(file)
-  return
+models = require('./lib/models')
 
 # Passport Configuration
 passport = require('./lib/config/passport')
 app = express()
 
 # Express settings
-require('./lib/config/express') app
+require('./lib/config/express')(app)
 
 # Routing
-require('./lib/routes') app
+require('./lib/routes')(app)
 
 # Start server
-app.listen config.port, ->
-  console.log 'Express server listening on port %d in %s mode', config.port, app.get('env')
+app.listen env.port, ->
+  console.log 'Express server listening on port %d in %s mode', env.port, app.get('env')
   return
 
 # Expose app
