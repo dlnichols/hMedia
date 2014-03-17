@@ -1,16 +1,16 @@
 # Generated on 2014-02-18 using generator-angular-fullstack 1.2.7
 'use strict'
 
-# # Globbing
-# for performance reasons we're only matching one level down:
-# 'test/spec/{,*/}*.js'
-# use this if you want to recursively match all subfolders:
-# 'test/spec/**/*.js'
+# Globbing
+# match one level down:
+# 'tmp/{,*/}*.js'
+# match all subfolders:
+# 'tmp/**/*.js'
 module.exports = (grunt) ->
-  # Load grunt tasks automatically
+  # Load grunt tasks
   require('load-grunt-tasks') grunt
 
-  # Time how long tasks take. Can help when optimizing build times
+  # Time how long tasks take to analyze / optimize
   require('time-grunt') grunt
 
   # Define the configuration for all the tasks
@@ -18,69 +18,72 @@ module.exports = (grunt) ->
 
     # Project settings
     yeoman:
-      app: require('./bower.json').appPath or 'app'
-      dist: 'dist'
+      app:     'app/'
+      lib:     'lib/'
+      tmp:     '.tmp/'
+      dist:    'dist/'
 
+    # Express settings
     express:
+      # Common options - Start our app with coffee
       options:
-        cmd: "coffee"
+        cmd:  'coffee'
         port: process.env.PORT or 9000
 
+      # Dev options - Set dev env and debug vars
       dev:
         options:
-          script: 'server.coffee'
-          debug: true
+          script:   'server.coffee'
+          debug:    true
+          node_env: 'development'
 
+      # Prod options - Set prod env and no debug
       prod:
         options:
-          script: 'dist/server.coffee'
+          script:   'dist/server.coffee'
+          debug:    false
           node_env: 'production'
 
+    # Command to open the browser
     open:
-      server:
+      serve:
         url: 'http://localhost:<%= express.options.port %>'
 
+    # Watch settings - WIP
     watch:
       js:
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js']
-        tasks: ['newer:jshint:all']
+        files: [ '<%= yeoman.app %>/scripts/**/*.js' ]
+        tasks: [ 'newer:jshint:serve' ]
         options:
           livereload: true
 
-      jsTest:
-        files: ['test/spec/{,*/}*.js']
-        tasks: [
-          'newer:jshint:test'
-        ]
+      coffee:
+        files: [ '<%= yeoman.app %>/scripts/**/*.coffee' ]
+        tasks: [ 'newer:coffee:serve' ]
+        options:
+          livereload: true
 
       compass:
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}']
-        tasks: ['compass:server']
-
-      less:
-        files: ['<%= yeoman.app %>/styles/{,*/}*.less']
-        tasks: ['less']
-
-      gruntfile:
-        files: ['Gruntfile.js']
-
-      livereload:
-        files: [
-          '<%= yeoman.app %>/views/{,*//*}*.{html,jade}'
-          '{.tmp,<%= yeoman.app %>}/styles/{,*//*}*.css'
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*//*}*.js'
-          '<%= yeoman.app %>/images/{,*//*}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
+        files: [ '<%= yeoman.app %>/styles/**/*.scss' ]
+        tasks: [ 'compass:serve' ]
         options:
           livereload: true
+
+      less:
+        files: [ '<%= yeoman.app %>/styles/{,*/}*.less' ]
+        tasks: [ 'newer:less:serve' ]
+        options:
+          livereload: true
+
+      gruntfile:
+        files: [ 'Gruntfile.js' ]
 
       express:
         files: [
           'server.coffee'
-          'lib/**/*.{js,json}'
+          'lib/**/*.coffee'
         ]
         tasks: [
-          'newer:jshint:server'
           'express:dev'
           'wait'
         ]
@@ -88,235 +91,195 @@ module.exports = (grunt) ->
           livereload: true
           nospawn: true #Without this option specified express won't be reloaded
 
-    # Make sure code styles are up to par and there are no obvious mistakes
-    jshint:
-      options:
-        jshintrc: '.jshintrc'
-        reporter: require('jshint-stylish')
-
-      server:
-        options:
-          jshintrc: 'lib/.jshintrc'
-
-        src: ['lib/{,*/}*.js']
-
-      all: ['<%= yeoman.app %>/scripts/{,*/}*.js']
-      test:
-        options:
-          jshintrc: 'test/.jshintrc'
-
-        src: ['test/spec/{,*/}*.js']
-
-    # Empties folders to start fresh
+    # Clean things up
     clean:
-      dist:
-        files: [
-          dot: true
-          src: [
-            '.tmp'
-            '<%= yeoman.dist %>'
-          ]
-        ]
+      build:  [
+        '<%= yeoman.tmp %>'
+        '<%= yeoman.dist %>'
+      ]
 
-      server: '.tmp'
+      serve: [
+        '<%= yeoman.tmp %>'
+      ]
 
-    # Compiles Sass to CSS and generates necessary files if requested
+    # Compiles Sass to CSS
     compass:
       options:
-        sassDir: '<%= yeoman.app %>/styles'
-        cssDir: '.tmp/styles'
-        generatedImagesDir: '.tmp/images/generated'
-        imagesDir: '<%= yeoman.app %>/images'
-        javascriptsDir: '<%= yeoman.app %>/scripts'
-        fontsDir: '<%= yeoman.app %>/styles/fonts'
-        importPath: '<%= yeoman.app %>/bower_components'
-        httpImagesPath: '/images'
-        httpGeneratedImagesPath: '/images/generated'
-        httpFontsPath: '/styles/fonts'
-        relativeAssets: false
-        assetCacheBuster: false
-        raw: 'Sass::Script::Number.precision = 10\n'
+        sassDir:                 '<%= yeoman.app %>/styles/'
+        imagesDir:               '<%= yeoman.app %>/images/'
+        javascriptsDir:          '<%= yeoman.app %>/scripts/'
+        fontsDir:                '<%= yeoman.app %>/fonts/'
+        importPath:              '<%= yeoman.app %>/bower_components/'
+        cssDir:                  '.tmp/styles/'
+        generatedImagesDir:      '.tmp/images/generated/'
+        httpImagesPath:          '/images/'
+        httpGeneratedImagesPath: '/images/generated/'
+        httpFontsPath:           '/styles/fonts/'
+        relativeAssets:          false
+        assetCacheBuster:        false
+        raw:                     'Sass::Script::Number.precision = 10\n'
 
-      dist:
+      build:
         options:
-          generatedImagesDir: '<%= yeoman.dist %>/public/images/generated'
+          generatedImagesDir: '<%= yeoman.dist %>/public/images/generated/'
 
-      server:
+      serve:
         options:
           debugInfo: true
 
+    # Compile LESS to CSS
     less:
-      dist:
-        files:
-          '.tmp/styles/bootstrap.amelia.css'   : ['<%= yeoman.app %>/styles/bootstrap.amelia.less']
-          '.tmp/styles/bootstrap.cerulean.css' : ['<%= yeoman.app %>/styles/bootstrap.cerulean.less']
-          '.tmp/styles/bootstrap.cosmo.css'    : ['<%= yeoman.app %>/styles/bootstrap.cosmo.less']
-          '.tmp/styles/bootstrap.cyborg.css'   : ['<%= yeoman.app %>/styles/bootstrap.cyborg.less']
-          '.tmp/styles/bootstrap.flatly.css'   : ['<%= yeoman.app %>/styles/bootstrap.flatly.less']
-          '.tmp/styles/bootstrap.journal.css'  : ['<%= yeoman.app %>/styles/bootstrap.journal.less']
-          '.tmp/styles/bootstrap.lumen.css'    : ['<%= yeoman.app %>/styles/bootstrap.lumen.less']
-          '.tmp/styles/bootstrap.readable.css' : ['<%= yeoman.app %>/styles/bootstrap.readable.less']
-          '.tmp/styles/bootstrap.simplex.css'  : ['<%= yeoman.app %>/styles/bootstrap.simplex.less']
-          '.tmp/styles/bootstrap.slate.css'    : ['<%= yeoman.app %>/styles/bootstrap.slate.less']
-          '.tmp/styles/bootstrap.spacelab.css' : ['<%= yeoman.app %>/styles/bootstrap.spacelab.less']
-          '.tmp/styles/bootstrap.standard.css' : ['<%= yeoman.app %>/styles/bootstrap.standard.less']
-          '.tmp/styles/bootstrap.superhero.css': ['<%= yeoman.app %>/styles/bootstrap.superhero.less']
-          '.tmp/styles/bootstrap.united.css'   : ['<%= yeoman.app %>/styles/bootstrap.united.less']
-          '.tmp/styles/bootstrap.yeti.css'     : ['<%= yeoman.app %>/styles/bootstrap.yeti.less']
+      build:
+        files: [
+          expand: true
+          cwd:    'app/styles/'
+          src:    [ '*.less' ]
+          dest:   '.tmp/styles/'
+          ext:    '.css'
+          extDot: 'last'
+        ]
+        options:
+          sourceMap: false
 
+      serve:
+        files: [
+          expand: true
+          cwd:    'app/styles/'
+          src:    [ '*.less' ]
+          dest:   '.tmp/styles/'
+          ext:    '.css'
+          extDot: 'last'
+        ]
         options:
           sourceMap: true
           sourceMapFilename: ''
           sourceMapBasepath: ''
           sourceMapRootpath: '/'
 
+    # Compile Coffee to JS
+    coffee:
+      files: [
+        expand: true
+        cwd:    '<%= yeoman.app %>/scripts/'
+        src:    [ '**/*.coffee' ]
+        dest:   '<%= yeoman.tmp %>/scripts/'
+        ext:    '.js'
+        extDot: 'last'
+      ]
+
+      build:
+        files: '<%= coffee.files %>'
+        options:
+          sourceMap: false
+
+      serve:
+        files: '<%= coffee.files %>'
+        options:
+          sourceMap: true
+          sourceMapDir: '<%= yeoman.tmp %>/script_maps/'
+
     # Renames files for browser caching purposes
     rev:
-      dist:
-        files:
-          src: [
-            '<%= yeoman.dist %>/public/scripts/{,*/}*.js'
-            '<%= yeoman.dist %>/public/styles/{,*/}*.css'
-            '<%= yeoman.dist %>/public/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-            '<%= yeoman.dist %>/public/styles/fonts/*'
-          ]
+      files:
+        src: [ '<%= yeoman.dist %>/public/{scripts,styles,images,fonts}/**/*.*' ]
 
     # Reads HTML for usemin blocks to enable smart builds that automatically
     # concat, minify and revision files. Creates configurations in memory so
     # additional tasks can operate on them
     useminPrepare:
-      html: [
-        '<%= yeoman.app %>/views/index.html'
-        '<%= yeoman.app %>/views/index.jade'
-      ]
+      html: [ '<%= yeoman.app %>/views/index.html' ]
       options:
         dest: '<%= yeoman.dist %>/public'
 
     # Performs rewrites based on rev and the useminPrepare configuration
     usemin:
-      html: [
-        '<%= yeoman.dist %>/public/{,*/}*.html'
-        '<%= yeoman.dist %>/public/{,*/}*.jade'
-      ]
-      css: ['<%= yeoman.dist %>/public/styles/{,*/}*.css']
+      html: [ '<%= yeoman.dist %>/public/**/*.html' ]
+      css:  [ '<%= yeoman.dist %>/public/styles/**/*.css' ]
       options:
-        assetsDirs: ['<%= yeoman.dist %>/public']
+        assetsDirs: [ '<%= yeoman.dist %>/public/' ]
 
     # The following *-min tasks produce minified files in the dist folder
-    imagemin:
-      dist:
-        dynamic:
-          files: [
-            expand: true
-            cwd: '<%= yeoman.app %>/images'
-            src: '{,*/}*.{png,jpg,jpeg,gif}'
-            dest: '<%= yeoman.dist %>/public/images'
-          ]
-
-    svgmin:
-      dist:
+    imagemin: # This should only need to be run on generated images in .tmp
+      dynamic:
         files: [
           expand: true
-          cwd: '<%= yeoman.app %>/images'
-          src: '{,*/}*.svg'
+          cwd:  '<%= yeoman.tmp %>/images'
+          src:  [ '**/*.{png,jpg,jpeg,gif}' ]
           dest: '<%= yeoman.dist %>/public/images'
+        ]
+        options:
+          cache: false
+
+    svgmin:
+      dynamic:
+        files: [
+          expand: true
+          cwd:  '<%= yeoman.app %>/images/'
+          src:  '**/*.svg'
+          dest: '<%= yeoman.dist %>/public/images/'
         ]
 
     htmlmin:
-      dist:
+      build:
         options:
           collapseWhitespace: true
           #collapseBooleanAttributes: true,
           removeCommentsFromCDATA: true
+          #removeOptionalTags: true
 
-        #removeOptionalTags: true
         files: [
           expand: true
-          cwd: '<%= yeoman.app %>/views'
-          src: [
-            '*.html'
-            'partials/**/*.html'
-          ]
-          dest: '<%= yeoman.dist %>/public'
+          cwd:  '<%= yeoman.app %>/views/'
+          src:  '**/*.html'
+          dest: '<%= yeoman.dist %>/public/'
         ]
 
     # Allow the use of non-minsafe AngularJS files. Automatically makes it
     # minsafe compatible so Uglify does not destroy the ng references
     ngmin:
-      dist:
+      build:
         files: [
           expand: true
-          cwd: '.tmp/concat/scripts'
-          src: 'application.js'
-          dest: '.tmp/concat/scripts'
+          cwd:  '.tmp/concat/scripts/'
+          src:  'application.js'
+          dest: '.tmp/concat/scripts/'
         ]
 
-    # Copies remaining files to places other tasks can use
+    # Copy pre-processed files from app to dist
     copy:
-      dist:
+      lib:
         files: [
-          {
-            expand: true
-            dot: true
-            cwd: '<%= yeoman.app %>'
-            dest: '<%= yeoman.dist %>/public'
-            src: [
-              '*.{ico,png,txt}'
-              'fonts/**/*'
-            ]
-          }
-          {
-            expand: true
-            dot: true
-            cwd: '<%= yeoman.app %>/views'
-            dest: '<%= yeoman.dist %>/public'
-            src: '**/*.jade'
-          }
-          {
-            expand: true
-            cwd: '.tmp/images'
-            dest: '<%= yeoman.dist %>/public/images'
-            src: ['generated/*']
-          }
-          {
-            expand: true
-            dest: '<%= yeoman.dist %>'
-            src: [
-              'package.json'
-              'server.coffee'
-            ]
-          }
-          {
-            expand: true
-            cwd: '.tmp/concat/scripts'
-            dest: '<%= yeoman.dist %>/public/scripts'
-            src: '**/*.js'
-          }
+          expand: true
+          src: [
+            'server.coffee'
+            'lib/**/*'
+          ]
+          dest: '<%= yeoman.dist %>'
+        ]
+
+      images:
+        files: [
+          expand: true
+          cwd:  '<%= yeoman.app %>/images/'
+          src:  '**/*'
+          dest: '<%= yeoman.dist %>/public/images/'
         ]
 
     # Run some tasks in parallel to speed up the build process
     concurrent:
-      server: [
-        'compass:server'
-        'less'
-      ]
-      test: [
-        'compass'
-        'less'
-      ]
-      dist: [
-        'compass:dist'
-        'less'
-        'imagemin'
-        'svgmin'
+      build: [
+        'compass:build'
+        'newer:less:build'
+        'newer:coffee:build'
+        'copy'
         'htmlmin'
       ]
+      serve: [
+        'compass:serve'
+        'newer:less:serve'
+        'newer:coffee:serve'
+      ]
 
-    # Test settings
-    karma:
-      unit:
-        configFile: 'karma.conf.js'
-        singleRun: true
 
   # Used for delaying livereload until after server has restarted
   grunt.registerTask 'wait', ->
@@ -335,37 +298,28 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'serve', (target) ->
     grunt.task.run [
-      'clean:server'
-      'concurrent:server'
+      'concurrent:serve'
       'express:dev'
+      'wait'
       'open'
       'watch'
     ]
-    return
+    null
 
-  grunt.registerTask 'test', [
-    'clean:server'
-    'concurrent:test'
-  ]
   grunt.registerTask 'build', [
-    'clean:dist'
+    'clean:build'
     'useminPrepare'
-    'concurrent:dist'
-    'concat'
+    'concurrent:build' # compass/less/coffee+image/svg/htmlmin
+    'concat' # based on usemin block in html
     'ngmin'
     'cssmin'
-    'copy:dist'
+    'uglify'
+    'copy'
     'rev'
     'usemin'
   ]
+
   grunt.registerTask 'default', [
-    'newer:jshint'
-    'test'
-    'build'
   ]
-  grunt.registerTask 'db:prepare', ->
-    done = @async()
-    require('./lib/dummydata.js').dbPrepare done
-    return
 
   return
