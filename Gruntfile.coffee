@@ -308,9 +308,9 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build', [
     'clean:build'
-    'useminPrepare'
+    'useminPrepare'    # prep concat/*min blocks
     'concurrent:build' # compass/less/coffee+image/svg/htmlmin
-    'concat' # based on usemin block in html
+    'concat'           # based on usemin block in html
     'ngmin'
     'cssmin'
     'uglify'
