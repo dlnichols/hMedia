@@ -3,13 +3,13 @@
 ###
 'use strict'
 
-mongoose = require('mongoose')
+mongoose = require 'mongoose'
 Schema   = mongoose.Schema
-crypto   = require('crypto')
+crypto   = require 'crypto'
 
 authTypes = [ 'local' ]
 
-console.log 'Creating user model...'
+console.log 'Loading user model...'
 
 ###
 # User Schema
@@ -38,7 +38,7 @@ UserSchema = new Schema(
 ###
 # Password
 UserSchema
-  .virtual 'password'
+  .virtual('password')
   .set (password) ->
     @_password = password
     @salt = @makeSalt()
@@ -51,7 +51,7 @@ UserSchema
 ###
 # Basic info to identify the current authenticated user in the app
 UserSchema
-  .virtual 'userInfo'
+  .virtual('userInfo')
   .get ->
     display:   @display || @name || @email
     name:      @name
@@ -61,34 +61,34 @@ UserSchema
 
 # Public profile information
 UserSchema
-  .virtual 'profile'
-  .get ->
-    name: @name
-    role: @role
+  .virtual('profile')
+ .get ->
+   name: @name
+   role: @role
 
 ###
 # Validations
 ###
 # Validate empty email
 UserSchema
-  .path 'email'
+  .path('email')
   .validate (email) ->
     email.length
   , 'Email cannot be blank'
 
 # Validate empty password
 UserSchema
-  .path 'hashedPassword'
+  .path('hashedPassword')
   .validate (hashedPassword) ->
     hashedPassword.length
   , 'Password cannot be blank'
 
 # Validate email is not taken
 UserSchema
-  .path 'email'
-  .validate (value, respond) ->
-    self = @
-    @constructor.findOne { email: value }, (err, user) ->
+ .path('email')
+ .validate (value, respond) ->
+   self = @
+   @constructor.findOne { email: value }, (err, user) ->
       throw err if err
       return respond(self.id == user.id) if user
       respond(true)
@@ -122,7 +122,7 @@ UserSchema
 UserSchema.methods =
   ###
   # Authenticate - check if the passwords are the same
-  # #
+  #
   # @param {String} plainText
   # @return {Boolean}
   # @api public
@@ -137,7 +137,7 @@ UserSchema.methods =
 
   ###
   # hasProvider - check if the user has credentials for the passed provider
-  # #
+  #
   # @param {String} provider
   # @return {Boolean}
   # @api public
@@ -147,16 +147,16 @@ UserSchema.methods =
 
   ###
   # Make salt
-  # #
+  #
   # @return {String}
   # @api public
   ###
   makeSalt: ->
-    crypto.randomBytes(16).toString('base64')
+    crypto.randomBytes(16).toString 'base64'
 
   ###
   # isConfirmed
-  # #
+  #
   # @return {Boolean}
   # @api public
   ###
@@ -165,7 +165,7 @@ UserSchema.methods =
 
   ###
   # Encrypt password
-  # #
+  #
   # @param {String} password
   # @return {String}
   # @api public
@@ -173,6 +173,6 @@ UserSchema.methods =
   encryptPassword: (password) ->
     return '' if !password || !@salt
     salt = new Buffer(@salt, 'base64')
-    crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64')
+    crypto.pbkdf2Sync(password, salt, 10000, 64).toString 'base64'
 
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model 'User', UserSchema

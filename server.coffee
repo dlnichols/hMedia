@@ -22,9 +22,6 @@ mongoose = require('mongoose')
 # Load the environment
 env = require('./lib/config/environment')
 
-# Connect to database
-db = mongoose.connect(env.mongo.uri, env.mongo.options)
-
 # Bootstrap models
 models = require('./lib/models')
 

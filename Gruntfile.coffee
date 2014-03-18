@@ -9,6 +9,7 @@
 module.exports = (grunt) ->
   # Load grunt tasks
   require('load-grunt-tasks') grunt
+  require('./lib/tasks/database') grunt
 
   # Time how long tasks take to analyze / optimize
   require('time-grunt') grunt
@@ -279,7 +280,6 @@ module.exports = (grunt) ->
         'newer:less:serve'
         'newer:coffee:serve'
       ]
-
 
   # Used for delaying livereload until after server has restarted
   grunt.registerTask 'wait', ->

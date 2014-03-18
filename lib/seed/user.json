@@ -1,0 +1,11 @@
+[{
+  "providers": [ "local" ],
+  "name": "Test User",
+  "email": "test@test.com",
+  "password": "test"
+}, {
+  "providers": [ "local" ],
+  "name": "Test User 2",
+  "email": "test2@test.com",
+  "password": "test2"
+}]
