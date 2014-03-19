@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "repository": "https://github.com/dlnichols/h_media.git",
   "dependencies": {
+    "async": "latest",
     "express": "latest",
     "ejs": "latest",
     "mongoose": "latest",
@@ -11,7 +12,8 @@
     "passport-local": "latest",
     "Faker": "latest",
     "lodash": "latest",
-    "coffee-script": "latest"
+    "coffee-script": "latest",
+    "underscore.string": "^2.3.3"
   },
   "devDependencies": {
     "load-grunt-tasks": "latest",

@@ -7,10 +7,19 @@
 passport       = require('passport')
 
 # Internal libs
-index          = require('./controllers')
+basic          = require('./controllers/basic')
 users          = require('./controllers/users')
+archives       = require('./controllers/archives')
 authentication = require('./controllers/authentication')
 middleware     = require('./middleware')
+
+# Vars
+authenticated = passport.authenticate [ 'local' ]
+authorized = (req, res, next) ->
+  authenticated req, res, next
+  #Check user authorization here
+  console.log 'Checking authorization'
+  next()
 
 console.log 'Routing...'
 
@@ -22,10 +31,21 @@ module.exports = exports = (app) ->
   not_found = (req, res) ->
     res.send(404)
 
+  ###
   # Server API Routes
-  app.post '/api/users', users.create
-  app.put  '/api/users', users.changePassword
-  app.get  '/api/users', users.show
+  ###
+  # User is a singleton route
+  app.post   '/api/user', users.create
+  app.get    '/api/user', authenticated, users.show
+  app.put    '/api/user', authenticated, users.update
+  app.delete '/api/user', authenticated, users.delete
+
+  # Archives
+  app.get    '/api/archives',     archives.index
+  app.post   '/api/archives',     archives.create
+  app.get    '/api/archives/:id', archives.show
+  app.put    '/api/archives/:id', archives.update
+  app.delete '/api/archives/:id', archives.delete
 
   # All undefined api routes should return a 404
   app.get  '/api/*', not_found
@@ -35,9 +55,9 @@ module.exports = exports = (app) ->
   app.del  '/auth', authentication.logout
 
   # Return 404 when partials or styles requested are not found
-  app.get  '/partials/*', index.partials
+  app.get  '/partials/*', basic.partials
   app.get  '/styles/*',   not_found
   app.get  '/images/*',   not_found
 
   # All other routes to use Angular routing in app/scripts/app.js
-  app.get  '/*', middleware.setUserCookie, middleware.setStateToken, index.index
+  app.get  '/*', middleware.setUserCookie, middleware.setStateToken, basic.index

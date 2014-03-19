@@ -6,11 +6,8 @@
 # External libs
 path = require('path')
 
-console.log 'Configuring basic REST controllers...'
+console.log 'Configuring basic controllers...'
 
-###
-# Send partial, or 404 if it doesn't exist
-###
 module.exports = exports =
   ###
   # Partials

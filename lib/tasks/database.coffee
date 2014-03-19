@@ -5,44 +5,15 @@
 
 module.exports = (grunt) ->
   # External libs
-#  _        = require('lodash')
-#  fs       = require('fs')
-#  path     = require('path')
-  env      = require('../config/environment')
+  async    = require('async')
   mongoose = require('mongoose')
 
   # Internal libs
-  models = require('../models')
+  env    = require('../config/environment')
+  models = require('../models')()
 
-  # Connect to database
-  mongoose.connect(env.mongo.uri, env.mongo.options)
-
-  # Models
-  User = mongoose.model 'User'
-
-  ###
-  # taskStart
-  #
-  # A simple function to start an asynchronous task, used in our db:seed task
-  # to DRY things up a little
-  ###
-  taskStart = (context, model, task) ->
-    done = context.async()
-    grunt.log.ok 'Loading ' + model + ' data.'
-    task (err) ->
-      taskFinish(done, model, err)
-
-  ###
-  # finishTask
-  #
-  # Called when 
-  ###
-  taskFinish = (done, model, err) ->
-    if err
-      grunt.log.error err
-    else
-      grunt.log.ok 'Done loading ' + model + ' data.'
-    done(err)
+  # Open database
+  mongoose.connect env.mongo.uri, env.mongo.options
 
   ###
   # Task: db:clear
@@ -53,7 +24,7 @@ module.exports = (grunt) ->
     # This task is asynchronous
     done = @async()
 
-    # Wait for the db connection to be open
+    # Wait for the db connection to be open (or we'll hang)
     mongoose.connection.on 'open', () ->
       # Drop the database
       mongoose.connection.db.dropDatabase (err) ->
@@ -70,12 +41,26 @@ module.exports = (grunt) ->
   # Seed the mongodb specified by the environment
   ###
   grunt.registerTask 'db:seed', 'Seed the database', () ->
-    # Get the data to seed
-    users = require('../seed/user.json')
+    users = require('../seed/users.json')
+    archives = require('../seed/archives.json')
 
-    # Seed the users
-    taskStart @, 'user', (done) ->
-      User.create users, done
+    allTasksComplete = @async()
+    async.parallel [
+      # Seed the users
+      (done) ->
+        grunt.log.ok 'Loading users...'
+        models.User.create users, done
+
+      # Seed the archives
+      (done) ->
+        grunt.log.ok 'Loading archives...'
+        models.Archive.create archives, done
+    ], (err) ->
+      if err
+        grunt.log.error err
+      else
+        grunt.log.ok 'Done.'
+      allTasksComplete(err)
     return
 
   ###
@@ -86,4 +71,13 @@ module.exports = (grunt) ->
   grunt.registerTask 'db:reset', 'Reset the database', () ->
     grunt.task.run 'db:clear'
     grunt.task.run 'db:seed'
+    return
+
+  ###
+  # Task: db:time:user
+  #
+  # Show how long it takes to create a single user
+  ###
+  grunt.registerTask 'db:time:user', () ->
+    new models.User({ password: "di!tyM123@" })
     return

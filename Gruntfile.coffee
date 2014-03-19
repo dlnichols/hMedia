@@ -1,5 +1,8 @@
-# Generated on 2014-02-18 using generator-angular-fullstack 1.2.7
 'use strict'
+
+# Require coffee-script/register so that require uses the project version of
+# coffeescript (~1.7) instead of the grunt version (~1.3)
+require('coffee-script/register')
 
 # Globbing
 # match one level down:
@@ -29,7 +32,7 @@ module.exports = (grunt) ->
       # Common options - Start our app with coffee
       options:
         cmd:  'coffee'
-        port: process.env.PORT or 9000
+        port: process.env.PORT or 3000
 
       # Dev options - Set dev env and debug vars
       dev:

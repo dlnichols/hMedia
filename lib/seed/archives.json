@@ -1,0 +1,7 @@
+[{
+  "glacierId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "glacierDescription": "A monkey was here!"
+}, {
+  "glacierId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+  "glacierDescription": "A monkey was not here!"
+}]

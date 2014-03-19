@@ -4,17 +4,14 @@
 'use strict'
 
 mongoose = require 'mongoose'
-Schema   = mongoose.Schema
 crypto   = require 'crypto'
-
-authTypes = [ 'local' ]
 
 console.log 'Loading user model...'
 
 ###
 # User Schema
 ###
-UserSchema = new Schema(
+UserSchema = new mongoose.Schema(
   display: String
   name: String
   email: String
@@ -25,96 +22,87 @@ UserSchema = new Schema(
     type   : Boolean
     default: false
   providers:
-    type   : []
+    type   : [ String ]
     default: [ 'local' ]
   hashedPassword: String
   salt: String
-  facebook: {}
-  google: {}
+  createdAt:
+    type: Date
+    default: Date.now
+  updatedAt:
+    type: Date
+    default: Date.now
 )
 
 ###
 # Virtual fields
 ###
-# Password
+# Password field (hashes password into hashedPassword)
 UserSchema
-  .virtual('password')
+  .virtual 'password'
   .set (password) ->
     @_password = password
     @salt = @makeSalt()
     @hashedPassword = @encryptPassword(password)
   .get ->
-    return @_password
+    return "[Hidden]"
 
-###
-# Retrieval
-###
 # Basic info to identify the current authenticated user in the app
 UserSchema
-  .virtual('userInfo')
+  .virtual 'userInfo'
   .get ->
     display:   @display || @name || @email
-    name:      @name
-    email:     @email
     role:      @role
-    confirmed: @confirmed
-
-# Public profile information
-UserSchema
-  .virtual('profile')
- .get ->
-   name: @name
-   role: @role
 
 ###
 # Validations
 ###
-# Validate empty email
+# Validate email
 UserSchema
-  .path('email')
-  .validate (email) ->
-    email.length
-  , 'Email cannot be blank'
-
-# Validate empty password
-UserSchema
-  .path('hashedPassword')
-  .validate (hashedPassword) ->
-    hashedPassword.length
-  , 'Password cannot be blank'
-
-# Validate email is not taken
-UserSchema
- .path('email')
- .validate (value, respond) ->
-   self = @
-   @constructor.findOne { email: value }, (err, user) ->
+  .path 'email'
+  .required true,
+    'Email address cannot be blank'
+  .validate (value, respond) ->
+    self = @
+    @constructor.findOne { email: value }, (err, user) ->
       throw err if err
       return respond(self.id == user.id) if user
       respond(true)
-  , 'The specified email address is already in use.'
+  , 'Email address is already in use'
 
-###
-# Presence validator
-###
-validatePresenceOf = (value) ->
-  value && value.length
+# Validate password
+UserSchema
+  .path 'hashedPassword'
+  # Require a password
+  .required true,
+    'Password cannot be blank'
+
+# Validate role
+UserSchema
+  .path 'role'
+  .match /(guest|user|admin)/,
+    'Role must be one of guest, user, or admin'
+
+# Validate confirmed
+UserSchema
+  .path 'confirmed'
+  # Require confirmation unless the user is new
+  .validate (value) ->
+    if @isNew
+      true
+    else
+      @confirmed
+  , 'Confirmation is required'
 
 ###
 # Pre-save hook
 ###
 UserSchema
   .pre 'save', (next) ->
-    return next() if !@isNew
+    # Change updated timestamp
+    @updatedAt = Date.now()
 
-    if @isNew && !@isConfirmed
-      console.log 'Need to confirm this account.'
-      return next()
-
-    if !validatePresenceOf(@hashedPassword)
-      next new Error('Invalid password')
-    else
-      next()
+    next()
 
 ###
 # Methods
@@ -173,6 +161,6 @@ UserSchema.methods =
   encryptPassword: (password) ->
     return '' if !password || !@salt
     salt = new Buffer(@salt, 'base64')
-    crypto.pbkdf2Sync(password, salt, 10000, 64).toString 'base64'
+    crypto.pbkdf2Sync(password, salt, 20000, 64).toString 'base64'
 
 module.exports = mongoose.model 'User', UserSchema

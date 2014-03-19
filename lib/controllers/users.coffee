@@ -4,15 +4,17 @@
 'use strict'
 
 # External libs
-passport = require('passport')
-mongoose = require('mongoose')
-User     = mongoose.model('User')
+passport = require 'passport'
+mongoose = require 'mongoose'
+
+# Model
+User = mongoose.model 'User'
 
 console.log 'Configuring users controller...'
 
 module.exports = exports =
   ###
-  # Create user
+  # create
   ###
   create: (req, res, next) ->
     newUser = new User(req.body)
@@ -24,33 +26,42 @@ module.exports = exports =
         res.json(req.user.userInfo)
 
   ###
-  # Show user
+  # show
   ###
   show: (req, res, next) ->
-    userId = req.params.id
-
-    User.findById userId, (err, user) ->
-      return next(err) if err
-      return res.send(404) if !user
-
-      res.send \
-        profile: user.profile
-      null
+    res.json(404)
 
   ###
-  # Change password
+  # update
+  #
+  # Allows for changing user password.
   ###
-  changePassword: (req, res, next) ->
+  update: (req, res, next) ->
     userId = req.user._id
     oldPass = String(req.body.oldPassword)
     newPass = String(req.body.newPassword)
 
     User.findById userId, (err, user) ->
-      if user.authenticate(oldPass)
+      if user.authenticate('local', oldPass)
         user.password = newPass
         user.save (err) ->
           return res.send(400) if err
 
           res.send(200)
       else
-        res.send(403)
+        res.send(401)
+
+  ###
+  # delete
+  #
+  # Allows a user to delete their account.
+  ###
+  delete: (req, res, next) ->
+  #  console.log req.user
+  #  userId = req.user._id
+  #  password = String(req.body.password)
+
+  #  User.findById userId, (err, user) ->
+  #    if user.authenticate(password)
+
+    res.send(403)
