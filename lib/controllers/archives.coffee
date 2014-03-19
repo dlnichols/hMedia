@@ -4,63 +4,82 @@
 'use strict'
 
 # External libs
-passport = require 'passport'
+_        = require 'lodash'
 mongoose = require 'mongoose'
+debug    = require('debug') 'hMedia:controllers:archive'
 
 # Model
 Archive = mongoose.model 'Archive'
 
-console.log 'Configuring archives controller...'
+debug 'Configuring archives controller...'
 
 module.exports = exports =
   ###
   # index
   ###
   index: (req, res, next) ->
+    res.send(401) unless req.user?.role is admin
+
     Archive
-      .find()
+      .find {}
       .sort {glacierId: 1}
       .limit 20
       .exec (err, archives) ->
-        console.log archives
         if err
-          next(err)
+          res.json 400, err
         else
-          res.json(archives)
+          res.json archives
 
   ###
   # create
   ###
   create: (req, res, next) ->
-    res.send(401) unless req.user.role is admin
+    res.send(401) unless req.user?.role is admin
 
-    newArchive = new Archive(req.body)
-    newArchive.save (err, archive) ->
-      return next(err) if err
-
-      res.json(archive[req.user.role])
+    new Archive()
+      .safeAssign req.body
+      .save (err, archive) ->
+        if err
+          res.json 400, err
+        else
+          res.json archive
 
   ###
   # show
   ###
   show: (req, res, next) ->
-    console.log "Params:" + req.params.id
-    console.log "Obj:" + req.archive._id
-    archiveId = req.params.id
-
-    Archive.findById archiveId, (err, archive) ->
-      return next(err) if err
-
-      res.send archive
+    Archive.findById req.params.id, (err, archive) ->
+      if err
+        res.json 400, err
+      else
+        res.json archive
 
   ###
   # update
   ###
   update: (req, res, next) ->
-    res.send(403)
+    res.send(401) unless req.user?.role is admin
+
+    Archive.findById req.params.id, (err, archive) ->
+      if err
+        res.json 400, err
+      else
+        archive
+          .safeAssign req.body
+          .save (err, archive) ->
+            if err
+              res.json 400, err
+            else
+              res.json archive
 
   ###
   # delete
   ###
   delete: (req, res, next) ->
-    res.send(403)
+    res.send(401) unless req.user?.role is admin
+
+    Archive.findByIdAndRemove req.params.id, (err, archive) ->
+      if err
+        res.json 400, err
+      else
+        res.json archive

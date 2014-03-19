@@ -3,9 +3,12 @@
 ###
 'use strict'
 
+# External libs
+_        = require 'lodash'
 mongoose = require 'mongoose'
+debug    = require('debug') 'hMedia:models:archive'
 
-console.log 'Loading archive model...'
+debug 'Loading archive model...'
 
 ###
 # ArchiveSchema
@@ -14,6 +17,11 @@ ArchiveSchema = new mongoose.Schema(
   glacierId: String
   glacierDescription: String
 )
+
+###
+# Whitelist mass assignment fields
+###
+ArchiveSchema.safeFields = [ "glacierId", "glacierDescription" ]
 
 ###
 # Virtual Fields
@@ -54,5 +62,20 @@ ArchiveSchema
   .path('glacierDescription')
   .required true,
     'Glacier Description cannot be blank'
+
+###
+# Methods
+###
+ArchiveSchema.methods =
+  ###
+  # safeAssign - only mass assign whitelisted attributes
+  #
+  # @params {Object} fields
+  # @return {Archive} this
+  # @api public
+  ###
+  safeAssign: (fields) ->
+    @[key] = value for key, value of _.pick(fields, ArchiveSchema.safeFields)
+    @
 
 module.exports = mongoose.model 'Archive', ArchiveSchema

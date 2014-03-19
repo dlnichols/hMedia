@@ -4,10 +4,9 @@
 'use strict'
 
 # External libs
-mongoose = require('mongoose')
 passport = require('passport')
 
-console.log 'Setting up authentication controllers...'
+console.log 'Configuring authentication controllers...'
 
 module.exports = exports =
   ###

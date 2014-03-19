@@ -10,9 +10,7 @@ require('coffee-script/register')
 # match all subfolders:
 # 'tmp/**/*.js'
 module.exports = (grunt) ->
-  # Load env
-  env = require('./lib/config/environment')
-
+  require('./lib/config/environment')
   # Load grunt tasks
   require('load-grunt-tasks') grunt
   require('./lib/tasks/database') grunt
@@ -35,7 +33,7 @@ module.exports = (grunt) ->
       # Common options - Start our app with coffee
       options:
         cmd:  'coffee'
-        port: env.port
+        port: process.env.port or 9000
 
       # Dev options - Set dev env and debug vars
       dev:

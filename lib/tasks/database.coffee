@@ -3,24 +3,22 @@
 ###
 'use strict'
 
+# Open database
+openMongo = (mongoose) ->
+  env = require('../config/environment')
+  mongoose.connect env.mongo.uri, env.mongo.options unless mongoose.connection.readyState
+
 module.exports = (grunt) ->
-  # External libs
-  async    = require('async')
-  mongoose = require('mongoose')
-
-  # Internal libs
-  env    = require('../config/environment')
-  models = require('../models')()
-
-  # Open database
-  mongoose.connect env.mongo.uri, env.mongo.options
-
   ###
   # Task: db:clear
   #
   # Remove all data from the mongodb specified by the environment
   ###
   grunt.registerTask 'db:clear', 'Empty the database', () ->
+    mongoose = require('mongoose')
+
+    openMongo(mongoose)
+
     # This task is asynchronous
     done = @async()
 
@@ -41,6 +39,12 @@ module.exports = (grunt) ->
   # Seed the mongodb specified by the environment
   ###
   grunt.registerTask 'db:seed', 'Seed the database', () ->
+    async    = require('async')
+    mongoose = require('mongoose')
+
+    openMongo(mongoose)
+
+    models = require('../models')()
     users = require('../seed/users.json')
     archives = require('../seed/archives.json')
 
@@ -71,13 +75,4 @@ module.exports = (grunt) ->
   grunt.registerTask 'db:reset', 'Reset the database', () ->
     grunt.task.run 'db:clear'
     grunt.task.run 'db:seed'
-    return
-
-  ###
-  # Task: db:time:user
-  #
-  # Show how long it takes to create a single user
-  ###
-  grunt.registerTask 'db:time:user', () ->
-    new models.User({ password: "di!tyM123@" })
     return

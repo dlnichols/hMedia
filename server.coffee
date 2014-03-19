@@ -1,3 +1,5 @@
+#!node_modules/.bin/coffee
+
 ###
 # Our server application
 # #

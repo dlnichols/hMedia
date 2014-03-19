@@ -13,7 +13,8 @@
     "Faker": "latest",
     "lodash": "latest",
     "coffee-script": "latest",
-    "underscore.string": "^2.3.3"
+    "underscore.string": "latest",
+    "debug": "^0.7.4"
   },
   "devDependencies": {
     "load-grunt-tasks": "latest",

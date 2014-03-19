@@ -4,9 +4,10 @@
 'use strict'
 
 # External libs
-_s   = require('underscore.string')
-fs   = require('fs')
-path = require('path')
+_s    = require 'underscore.string'
+fs    = require 'fs'
+path  = require 'path'
+debug = require('debug') 'hMedia:models'
 
 modelsPath = path.join __dirname, 'models'
 
@@ -16,6 +17,7 @@ requireWithContext = (moduleName, context) ->
   return unless fs.existsSync(moduleName)
   module = require moduleName
   exportName = _s.capitalize(path.basename(moduleName).split('.')[0])
+  debug 'Loading ' + exportName + ' from ' + moduleName + '...'
   context[exportName] = module if context?
   exports[exportName] = module
 
@@ -23,7 +25,7 @@ exports = {}
 
 # Load our models
 module.exports = (context) ->
-  console.log 'Loading models...'
+  debug 'Loading models...'
   files = fs.readdirSync(modelsPath)
   requireWithContext path.join(modelsPath, file), context for file in files
   exports

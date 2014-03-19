@@ -3,16 +3,17 @@
 ###
 'use strict'
 
+# External libs
 mongoose = require 'mongoose'
 crypto   = require 'crypto'
+debug    = require('debug') 'hMedia:models:user'
 
-console.log 'Loading user model...'
+debug 'Loading user model...'
 
 ###
 # User Schema
 ###
 UserSchema = new mongoose.Schema(
-  display: String
   name: String
   email: String
   role:
@@ -35,6 +36,11 @@ UserSchema = new mongoose.Schema(
 )
 
 ###
+# Whitelisting
+###
+UserSchema.safeFields = [ "name", "email", "password" ]
+
+###
 # Virtual fields
 ###
 # Password field (hashes password into hashedPassword)
@@ -51,7 +57,7 @@ UserSchema
 UserSchema
   .virtual 'userInfo'
   .get ->
-    display:   @display || @name || @email
+    display:   @name || @email
     role:      @role
 
 ###
@@ -109,7 +115,18 @@ UserSchema
 ###
 UserSchema.methods =
   ###
-  # Authenticate - check if the passwords are the same
+  # safeAssign - only mass assign whitelisted attributes
+  #
+  # @params {Object} fields
+  # @return {User} this
+  # @api public
+  ###
+  safeAssign: (fields) ->
+    @[key] = value for key, value of _.pick(fields, ArchiveSchema.safeFields)
+    @
+
+  ###
+  # authenticate - check if the passwords are the same
   #
   # @param {String} plainText
   # @return {Boolean}

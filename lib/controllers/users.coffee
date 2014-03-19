@@ -4,32 +4,37 @@
 'use strict'
 
 # External libs
-passport = require 'passport'
 mongoose = require 'mongoose'
+debug    = require('debug') 'hMedia:controllers:user'
 
 # Model
 User = mongoose.model 'User'
 
-console.log 'Configuring users controller...'
+debug 'Configuring users controller...'
 
 module.exports = exports =
   ###
   # create
   ###
   create: (req, res, next) ->
-    newUser = new User(req.body)
-    newUser.save (err) ->
-      return res.json(400, err) if err
+    new User()
+      .safeAssign req.body
+      .save (err, user) ->
+        if err
+          res.json 400, err
+        else
 
-      req.logIn newUser, (err) ->
-        return next(err) if err
-        res.json(req.user.userInfo)
+        req.logIn user, (err) ->
+          if err
+            res.json 400, err
+          else
+            res.json req.user
 
   ###
   # show
   ###
   show: (req, res, next) ->
-    res.json(404)
+    res.json req.user
 
   ###
   # update
@@ -37,6 +42,7 @@ module.exports = exports =
   # Allows for changing user password.
   ###
   update: (req, res, next) ->
+    # TODO: Rewrite this whole thing
     userId = req.user._id
     oldPass = String(req.body.oldPassword)
     newPass = String(req.body.newPassword)
@@ -57,11 +63,10 @@ module.exports = exports =
   # Allows a user to delete their account.
   ###
   delete: (req, res, next) ->
-  #  console.log req.user
-  #  userId = req.user._id
-  #  password = String(req.body.password)
-
-  #  User.findById userId, (err, user) ->
-  #    if user.authenticate(password)
-
-    res.send(403)
+    # TODO: Check if password from req matches user
+    req.user.remove (err, user) ->
+      if err
+        res.json 400, err
+      else
+        req.logOut()
+        res.json 200

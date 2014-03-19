@@ -21,9 +21,3 @@ module.exports = exports =
   setUserCookie: (req, res, next) ->
     res.cookie 'user', JSON.stringify(req.user.userInfo) if req.user
     next()
-
-  # Set a state token
-  setStateToken: (req, res, next) ->
-    req.session.state = crypto.randomBytes(48).toString()
-    res.cookie 'state', JSON.stringify(req.session.state)
-    next()

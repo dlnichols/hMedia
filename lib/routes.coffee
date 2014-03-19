@@ -59,5 +59,5 @@ module.exports = exports = (app) ->
   app.get  '/styles/*',   not_found
   app.get  '/images/*',   not_found
 
-  # All other routes to use Angular routing in app/scripts/app.js
-  app.get  '/*', middleware.setUserCookie, middleware.setStateToken, basic.index
+  # All not found routes return the user cookie and our Angular app
+  app.get  '/*', middleware.setUserCookie, basic.index
