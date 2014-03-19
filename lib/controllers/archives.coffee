@@ -17,7 +17,16 @@ module.exports = exports =
   # index
   ###
   index: (req, res, next) ->
-    res.send(403)
+    Archive
+      .find()
+      .sort {glacierId: 1}
+      .limit 20
+      .exec (err, archives) ->
+        console.log archives
+        if err
+          next(err)
+        else
+          res.json(archives)
 
   ###
   # create

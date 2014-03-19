@@ -5,7 +5,6 @@
 
 # External libs
 mongoose      = require('mongoose')
-User          = mongoose.model('User')
 passport      = require('passport')
 LocalStrategy = require('passport-local').Strategy
 

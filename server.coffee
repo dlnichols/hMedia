@@ -12,33 +12,28 @@ require 'coffee-script/register'
 # External libs
 fs       = require('fs')
 path     = require('path')
-express  = require('express')
 mongoose = require('mongoose')
-
-###
-# Main application file
-###
+app      = require('express')()
 
 # Load the environment
 env = require('./lib/config/environment')
 
-# Bootstrap models
-models = require('./lib/models')
+# Load models
+require('./lib/models')(env)
 
-# Passport Configuration
-passport = require('./lib/config/passport')
-app = express()
-
-# Express settings
+# Configure Express
 require('./lib/config/express')(app)
 
 # Routing
 require('./lib/routes')(app)
+
+# Open database connection
+mongoose.connect env.mongo.uri, env.mongo.options
 
 # Start server
 app.listen env.port, ->
   console.log 'Express server listening on port %d in %s mode', env.port, app.get('env')
   return
 
-# Expose app
-exports = module.exports = app
+# Expose app if loaded as a module
+#module.exports = exports = app

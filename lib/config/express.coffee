@@ -4,13 +4,13 @@
 'use strict'
 
 # External libs
-path       = require('path')
-express    = require('express')
-passport   = require('passport')
-mongoStore = require('connect-mongo')(express)
+path       = require 'path'
+express    = require 'express'
+mongoStore = require('connect-mongo') express
 
 # Internal libs
-env        = require('./environment')
+env        = require './environment'
+passport   = require './passport'
 
 # Function to disable caching
 disableCache = (req, res, next) ->
@@ -34,14 +34,15 @@ module.exports = exports = (app) ->
     app.use express.static(path.join(env.root, 'app'))
     app.use express.errorHandler()
     app.set 'views', env.root + '/app/views'
-    null
+    return
 
   # Production specific config
-  app.configure 'production', ->
-    app.use express.favicon(path.join(env.root, 'public', 'favicon.png'))
-    app.use express.static(path.join(env.root, 'public'))
-    app.set 'views', env.root + '/views'
-    null
+  # Static files should be served by static web server on prod...
+  #app.configure 'production', ->
+    #app.use express.favicon(path.join(env.root, 'public', 'favicon.png'))
+    #app.use express.static(path.join(env.root, 'public'))
+    #app.set 'views', env.root + '/views'
+    #return
 
   # Config for all environments
   app.configure ->
@@ -52,7 +53,6 @@ module.exports = exports = (app) ->
     app.use express.urlencoded()
     app.use express.methodOverride()
     app.use express.cookieParser()
-    null
 
     # Persist sessions with mongoStore
     app.use express.session(
@@ -61,16 +61,16 @@ module.exports = exports = (app) ->
         url: env.mongo.uri
         collection: 'sessions'
       , ->
-        console.log 'db connection open'
+        console.log 'Mongo connection for session storage open.'
       )
     )
 
-    # Use passport session
+    # Use passport (and passport session)
     app.use passport.initialize()
     app.use passport.session()
 
-    # Router needs to be last
+    # Router (should be last)
     app.use app.router
-    null
+    return
 
-  null
+  return
