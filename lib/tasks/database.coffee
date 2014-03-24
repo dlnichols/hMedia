@@ -1,9 +1,25 @@
 ###
-# Seed
+# database.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# Database grunt tasks for clearing and seeding our mongo DB.  Mosty useful in
+# development and testing, as you really aren't resetting the production
+# database a lot.
 ###
 'use strict'
 
-# Open database
+# External libs
+debug = require('debug') 'hMedia:grunt:database'
+
+debug 'Configuring grunt database tasks...'
+
+###
+# openMongo
+#
+# Open database if it isn't already
+###
 openMongo = (mongoose) ->
   env = require('../config/environment')
   mongoose.connect env.mongo.uri, env.mongo.options unless mongoose.connection.readyState

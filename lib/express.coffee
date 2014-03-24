@@ -1,5 +1,11 @@
 ###
-# Express configuration
+# express.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# This module does all of our express configuration, except routing (that's in
+# a separate module).
 ###
 'use strict'
 
@@ -7,12 +13,19 @@
 path       = require 'path'
 express    = require 'express'
 mongoStore = require('connect-mongo') express
+debug      = require('debug') 'hMedia:express'
 
 # Internal libs
-env        = require './environment'
-passport   = require './passport'
+env        = require './config/environment'
+passport   = require './config/passport'
+errors     = require './errors'
 
+###
+# disableCache
+#
 # Function to disable caching
+# TODO: Consider exporting this to middleware module
+###
 disableCache = (req, res, next) ->
   if req.url.indexOf('/scripts/') == 0
     res.header 'Cache-Control', 'no-cache, no-store, must-revalidate'
@@ -20,19 +33,21 @@ disableCache = (req, res, next) ->
     res.header 'Expires', 0
   next()
 
+debug 'Configuring express...'
+
 ###
 # Express configuration
 ###
-console.log 'Configuring express...'
-
 module.exports = exports = (app) ->
+  # Inform express that it is behind a reverse proxy
+  app.enable 'trust proxy'
+
   # Development specific config
   app.configure 'development', ->
     app.use require('connect-livereload')()
     app.use disableCache
     app.use express.static(path.join(env.root, '.tmp'))
     app.use express.static(path.join(env.root, 'app'))
-    app.use express.errorHandler()
     app.set 'views', env.root + '/app/views'
     return
 
@@ -55,21 +70,20 @@ module.exports = exports = (app) ->
     app.use express.cookieParser()
 
     # Persist sessions with mongoStore
-    app.use express.session(
-      secret: require('./secrets/session').secret
+    app.use express.session \
+      secret: require('./config/secrets/session').secret
       store: new mongoStore(
         url: env.mongo.uri
         collection: 'sessions'
       , ->
-        console.log 'Mongo connection for session storage open.'
+        debug 'Mongo connection for session storage open.'
       )
-    )
 
     # Use passport (and passport session)
     app.use passport.initialize()
     app.use passport.session()
 
-    # Router (should be last)
+    # Router
     app.use app.router
     return
 

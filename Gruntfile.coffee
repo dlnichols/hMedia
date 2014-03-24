@@ -2,7 +2,7 @@
 
 # Require coffee-script/register so that require uses the project version of
 # coffeescript (~1.7) instead of the grunt version (~1.3)
-require('coffee-script/register')
+require 'coffee-script/register'
 
 # Globbing
 # match one level down:
@@ -10,7 +10,9 @@ require('coffee-script/register')
 # match all subfolders:
 # 'tmp/**/*.js'
 module.exports = (grunt) ->
-  require('./lib/config/environment')
+  # Load our environment settings
+  env = require './lib/config/environment'
+
   # Load grunt tasks
   require('load-grunt-tasks') grunt
   require('./lib/tasks/database') grunt
@@ -33,7 +35,7 @@ module.exports = (grunt) ->
       # Common options - Start our app with coffee
       options:
         cmd:  'coffee'
-        port: process.env.port or 9000
+        port: env.port
 
       # Dev options - Set dev env and debug vars
       dev:

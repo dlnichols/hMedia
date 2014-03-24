@@ -1,16 +1,28 @@
 ###
-# Authentication
+# controllers/authentication.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# This module defines the login/logout actions for authentication, for use in
+# our express router.
 ###
 'use strict'
 
 # External libs
-passport = require('passport')
+passport = require 'passport'
+debug    = require('debug') 'hMedia:controllers:authentication'
 
-console.log 'Configuring authentication controllers...'
+debug 'Configuring authentication controllers...'
 
+###
+# Authentication controller
+#
+# Define the login/logout actions
+###
 module.exports = exports =
   ###
-  # Login
+  # login
   ###
   login: (req, res, next) ->
     passport.authenticate('local', (err, user, info) ->
@@ -23,7 +35,7 @@ module.exports = exports =
     )(req, res, next)
 
   ###
-  # Login
+  # logout
   ###
   logout: (req, res) ->
     req.logout()

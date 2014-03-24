@@ -1,5 +1,11 @@
 ###
-# Users controller
+# controllers/user.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# This module defines the basic CRUD actions for the user resource, for use in
+# our express router.
 ###
 'use strict'
 
@@ -7,11 +13,16 @@
 mongoose = require 'mongoose'
 debug    = require('debug') 'hMedia:controllers:user'
 
-# Model
-User = mongoose.model 'User'
-
 debug 'Configuring users controller...'
 
+# Retrieve our model from mongoose
+User = mongoose.model 'User'
+
+###
+# User controller
+#
+# Define the basic CRUD actions for the user resource
+###
 module.exports = exports =
   ###
   # create

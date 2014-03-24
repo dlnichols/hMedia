@@ -11,6 +11,6 @@ MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 # License
 
 MIT License
-Copyright (c) 2014 Dan Nichols
+Copyright © 2014 Dan Nichols
 
 See LICENSE for further details.

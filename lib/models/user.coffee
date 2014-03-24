@@ -1,5 +1,12 @@
 ###
-# User model
+# models/user.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# This is our user model.  We define the user's state here, this includes
+# identification, authorization, confirmation, creation, and when it was last
+# updated.  All the standard user stuff.
 ###
 'use strict'
 

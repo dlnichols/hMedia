@@ -1,5 +1,13 @@
 ###
-# Archive model
+# models/archive.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# This is our archive model.  This resource describes an object that is being
+# stored by our archival system.  Initially this archival process will be
+# backed by the AWS Glacier service, though plans are to keep it flexible
+# eneough to allow for other backends.
 ###
 'use strict'
 
@@ -43,23 +51,25 @@ ArchiveSchema
 ###
 # Validate glacierId
 ArchiveSchema
-  .path('glacierId')
+  .path 'glacierId'
   .required true,
     'Glacier ID is required'
   .validate (value) ->
-    value?.length == 42
+    value && Buffer.byteLength(value) == 42
   , 'Glacier ID must be 42?? bytes'
   .validate (value, respond) ->
     self = @
     @constructor.findOne { glacierId: value }, (err, archive) ->
       throw err if err
-      return respond(self.id == archive.id) if archive
-      respond(true)
+      if archive
+        respond self.id == archive.id
+      else
+        respond true
   , 'The specified Glacier ID is already in use.'
 
 # Validate glacierDescription
 ArchiveSchema
-  .path('glacierDescription')
+  .path 'glacierDescription'
   .required true,
     'Glacier Description cannot be blank'
 
