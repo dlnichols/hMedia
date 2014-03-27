@@ -1,3 +1,11 @@
+###
+# scripts/main.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# Here we setup (and execute) our main application.
+###
 'use strict'
 
 angular.module 'hMediaApp', [
@@ -6,19 +14,16 @@ angular.module 'hMediaApp', [
   'ngSanitize'
   'ngRoute'
   'ngAnimate'
-  'ui.bootstrap'
 ]
 
 .config ($routeProvider, $locationProvider, $httpProvider) ->
   $routeProvider
     .when '/',
       templateUrl: 'partials/main'
-      controller: 'tabbedCtrl'
-    #.when('/settings', {
-    #  templateUrl: 'partials/settings',
-    #  controller: 'settingsCtrl',
-    #  authenticate: true
-    #})
+    .when '/settings',
+      templateUrl: 'partials/settings'
+      controller:  'settingsController'
+      authenticate: true
     .otherwise redirectTo: '/'
 
   # Use the HTML5 history API

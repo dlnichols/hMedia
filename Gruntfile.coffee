@@ -54,7 +54,7 @@ module.exports = (grunt) ->
     # Command to open the browser
     open:
       serve:
-        url: 'http://localhost:<%= express.options.port %>'
+        url: 'http://localhost:' + env.port
 
     # Watch settings - WIP
     watch:

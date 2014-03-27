@@ -1,3 +1,9 @@
+###
+# scripts/services/notifications.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+###
 'use strict'
 
 angular.module 'hMediaApp'

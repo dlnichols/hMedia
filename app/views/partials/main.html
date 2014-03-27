@@ -1,13 +1,6 @@
-<div class="row">
-  <div class="col-md-3">
-    <ul class="nav nav-pills nav-stacked">
-      <li ng-repeat="tab in tabs" ng-class="{ active: isActive(tab) }">
-        <a ng-click="changeTab(tab.key)">{{tab.title}}</a>
-      </li>
-    </ul>
-  </div>
-  <div class="col-md-9">
-    <div ng-include src="currentTemplate">
-    </div>
-  </div>
-</div>
+<tabset vertical="true" type="pills">
+  <tab src="partials/welcome">Home</tab>
+  <tab src="partials/readme" active="true">Readme</tab>
+  <tab src="partials/todo">To Do</tab>
+  <tab src="partials/debug">Debug</tab>
+</tabset>

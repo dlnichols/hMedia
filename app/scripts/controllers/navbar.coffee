@@ -1,7 +1,13 @@
+###
+# scripts/controllers/navbar.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+###
 'use strict'
 
 angular.module 'hMediaApp'
-.controller 'navbarCtrl', ($scope, $location, session) ->
+.controller 'navbarController', ($scope, $location, session) ->
   # Not isProcessing logins to start
   $scope.isProcessing = false
 

@@ -1,0 +1,17 @@
+.alert {
+  position: fixed;
+  left: 25%;
+  top: 35px;
+  width: 50%;
+  z-index: 9999;
+}
+
+.alert.ng-enter {
+  -webkit-animation: fade-in 0.3s ease-in;
+  animation: fade-in 0.3s ease-in;
+}
+
+.alert.ng-leave {
+  -webkit-animation: fade-out 0.3s ease-in;
+  animation: fade-out 0.3s ease-in;
+}

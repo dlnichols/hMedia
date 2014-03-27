@@ -1,0 +1,17 @@
+@-webkit-keyframes slide-up {
+  from {
+    -webkit-transform: translateY(1000px);
+  }
+  to {
+    -webkit-transform: translateY(0px);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(1000px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}

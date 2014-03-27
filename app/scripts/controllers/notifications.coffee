@@ -1,7 +1,13 @@
+###
+# scripts/controllers/notifications.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+###
 'use strict'
 
 angular.module 'hMediaApp'
-.controller 'notificationsCtrl', ($scope, notifications) ->
+.controller 'notificationsController', ($scope, notifications) ->
   $scope.notices = notifications.array
 
   $scope.close = (index) ->
@@ -9,3 +15,5 @@ angular.module 'hMediaApp'
 
   $scope.style = (type) ->
     'alert-' + type
+
+  return

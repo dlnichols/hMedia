@@ -1,0 +1,9 @@
+.tab-pane.active-add {
+  -webkit-animation: fade-in 1.0s;
+  animation: fade-in 1.0s;
+}
+
+.tab-pane.active-remove {
+  -webkit-animation: fade-out 3.0s ease-out;
+  animation: fade-out 3.0s ease-out;
+}

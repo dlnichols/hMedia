@@ -10,12 +10,19 @@ body {
   top: 50px;
   height: 100%;
   width: 1140px;
+  z-index: -1;
 }
 
 /* Prevent flicker when the app is starting by not showing cloaked items */
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+[ng-cloak], .ng-cloak {
   display: none !important;
 }
 
-@import "alerts/style";
-@import "alerts/animations";
+// Additional styles (these partials should be based on Bootstrap vars
+@import "elements/alert";
+@import "elements/tab_pane";
+
+// Animations
+@import "animations/fades";
+@import "animations/bounces";
+@import "animations/slides";
