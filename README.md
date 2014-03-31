@@ -1,15 +1,15 @@
-# hMedia
-
+hMedia
+======
 A personal project to explore the intricacies of a MEAN stack.  This project
 aims to implement a small media server with the usual browse/play features, and
 additional features such as long term archival, and on-the-fly transcoding.
 
-# Stack
-
+Stack
+======
 MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
-# License
-
+License
+=======
 MIT License
 Copyright © 2014 Dan Nichols
 
