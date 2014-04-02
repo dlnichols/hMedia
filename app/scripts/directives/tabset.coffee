@@ -18,6 +18,7 @@ angular.module 'hMediaApp'
       if tab.active and tab isnt selectedTab
         tab.active = false
         console.log tab
+      return
     # Set the selected tab as active
     selectedTab.active = true
     return
@@ -28,6 +29,7 @@ angular.module 'hMediaApp'
       newTab.active = true
     else if newTab.active
       self.select newTab
+    return
 
   self.removeTab = (tab) ->
     index = tabs.indexOf tab
@@ -77,7 +79,7 @@ angular.module 'hMediaApp'
   transclude: true
   replace:    true
   scope:
-    active:   '@'
+    active:   '=?'
     src:      '@'
   compile: (element, attributes, transclude) ->
     postlink = (scope, element, attributes, controller) ->
