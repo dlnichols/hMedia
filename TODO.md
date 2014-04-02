@@ -16,8 +16,6 @@ Client
 
 Server
 ------
-* Fix README and TODO partials to read/translate their respective markdown
-  files
 * Fix watch section of Gruntfile
 * Already seeing some non-DRY stuff in models
   * Procedural generation of models?
