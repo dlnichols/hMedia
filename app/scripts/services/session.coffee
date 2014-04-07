@@ -6,7 +6,18 @@
 ###
 'use strict'
 
-angular.module('hMediaApp')
+angular.module 'hMediaApp'
+.factory 'user', ($resource) ->
+  $resource '/api/user',
+    id: '@id'
+  ,
+    update:
+      method: 'PUT'
+      params: {}
+
+.factory 'authentication', ($resource) ->
+  $resource '/auth/'
+
 .factory 'session', ($q, $http, $location, $cookieStore, authentication, user, notifications) ->
   # Get currentUser from cookie
   currentUser = $cookieStore.get('user') || null
@@ -33,7 +44,7 @@ angular.module('hMediaApp')
         when 'local'
           authentication.save(data, authSuccess, authFailure).$promise
         else
-          notifications.send({ message: 'Strategy not implemented.' })
+          notifications.send message: 'Strategy not implemented.'
 
     ###
     # Unauthenticate user
@@ -42,7 +53,7 @@ angular.module('hMediaApp')
     # @return {Promise}
     ###
     logout: ->
-      return authentication.delete(authLogout, authFailure).$promise
+      authentication.delete(authLogout, authFailure).$promise
 
     ###
     # Create account
@@ -53,9 +64,11 @@ angular.module('hMediaApp')
     createAccount: (provider, data) ->
       switch provider
         when 'local'
+          console.log 'Saving user...'
+          console.log data
           user.save(data, authSuccess, authFailure).$promise
         else
-          notifications.send({ message: 'Strategy not implemented.' })
+          notifications.send message: 'Strategy not implemented.'
 
     ###
     # Gets all available info on authenticated user

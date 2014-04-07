@@ -96,7 +96,7 @@ module.exports = (grunt) ->
         ]
         options:
           livereload: true
-          nospawn: true #Without this option specified express won't be reloaded
+          nospawn:    true
 
     # Clean things up
     clean:
@@ -292,10 +292,10 @@ module.exports = (grunt) ->
     grunt.log.ok 'Waiting for server reload...'
     done = @async()
     setTimeout (->
-      grunt.log.writeln 'Done waiting!'
+      grunt.log.ok 'Done waiting!'
       done()
       return
-    ), 500
+    ), 1000
     return
 
   grunt.registerTask 'express-keepalive', 'Keep grunt running', ->

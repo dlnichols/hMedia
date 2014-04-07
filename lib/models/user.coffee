@@ -11,6 +11,7 @@
 'use strict'
 
 # External libs
+_        = require 'lodash'
 mongoose = require 'mongoose'
 crypto   = require 'crypto'
 debug    = require('debug') 'hMedia:models:user'
@@ -26,15 +27,15 @@ UserSchema = new mongoose.Schema(
   role:
     type   : String
     default: 'guest'
-  confirmed:
-    type   : Boolean
-    default: false
   providers:
     type   : [ String ]
     default: [ 'local' ]
   hashedPassword: String
   salt: String
   createdAt:
+    type: Date
+    default: Date.now
+  confirmedAt:
     type: Date
     default: Date.now
   updatedAt:
@@ -98,13 +99,13 @@ UserSchema
 
 # Validate confirmed
 UserSchema
-  .path 'confirmed'
+  .path 'confirmedAt'
   # Require confirmation unless the user is new
   .validate (value) ->
     if @isNew
       true
     else
-      @confirmed
+      @isConfirmed()
   , 'Confirmation is required'
 
 ###
@@ -129,7 +130,7 @@ UserSchema.methods =
   # @api public
   ###
   safeAssign: (fields) ->
-    @[key] = value for key, value of _.pick(fields, ArchiveSchema.safeFields)
+    @[key] = value for key, value of _.pick(fields, UserSchema.safeFields)
     @
 
   ###
@@ -173,7 +174,7 @@ UserSchema.methods =
   # @api public
   ###
   isConfirmed: ->
-    @confirmed
+    !!@confirmedAt
 
   ###
   # Encrypt password

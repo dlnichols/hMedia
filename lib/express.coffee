@@ -51,14 +51,6 @@ module.exports = exports = (app) ->
     app.set 'views', env.root + '/app/views'
     return
 
-  # Production specific config
-  # Static files should be served by static web server on prod...
-  #app.configure 'production', ->
-    #app.use express.favicon(path.join(env.root, 'public', 'favicon.png'))
-    #app.use express.static(path.join(env.root, 'public'))
-    #app.set 'views', env.root + '/views'
-    #return
-
   # Config for all environments
   app.configure ->
     app.engine 'html', require('ejs').renderFile
