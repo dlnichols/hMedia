@@ -17,8 +17,6 @@
 require 'coffee-script/register'
 
 # External libs
-fs       = require 'fs'
-path     = require 'path'
 mongoose = require 'mongoose'
 app      = require('express')()
 
@@ -48,5 +46,5 @@ app.listen env.port, ->
   console.log 'Express server listening on port %d in %s mode', env.port, app.get('env')
   return
 
-# Expose app if loaded as a module
+# Expose app
 module.exports = exports = app

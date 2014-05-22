@@ -32,7 +32,8 @@ loadEnv = (context) ->
   # perr
   #
   # Helper method to use as a callback for mongo methods.  It simply prints the
-  # returned model or error to the console.
+  # returned model or error to the console, and is used to keep the methods from
+  # throwing errors that won't be handled.
   ###
   context.perr = (err, model) ->
     console.log "Error!" if err
@@ -40,13 +41,13 @@ loadEnv = (context) ->
     console.log model if model
 
 # Load the repl module
-myrepl = require('repl')
+myrepl = require 'repl'
 
 # Set custom environment on context reset
 myrepl.REPLServer.prototype.resetContext = ->
   @context = @createContext()
   loadEnv @context
-  @emit('reset', @context)
+  @emit 'reset', @context
 
 # Start the REPL
 myrepl.start {}

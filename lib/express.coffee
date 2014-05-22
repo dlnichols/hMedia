@@ -12,7 +12,8 @@
 # External libs
 path       = require 'path'
 express    = require 'express'
-mongoStore = require('connect-mongo') express
+session    = require 'express-session'
+mongoStore = require('connect-mongo') session
 debug      = require('debug') 'hMedia:express'
 
 # Internal libs

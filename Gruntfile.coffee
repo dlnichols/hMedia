@@ -4,21 +4,18 @@
 # coffeescript (~1.7) instead of the grunt version (~1.3)
 require 'coffee-script/register'
 
-# Globbing
-# match one level down:
-# 'tmp/{,*/}*.js'
-# match all subfolders:
-# 'tmp/**/*.js'
 module.exports = (grunt) ->
   # Load our environment settings
   env = require './lib/config/environment'
 
-  # Load grunt tasks
-  require('load-grunt-tasks') grunt
-  require('./lib/tasks/database') grunt
-
   # Time how long tasks take to analyze / optimize
   require('time-grunt') grunt
+
+  # Load NPM tasks
+  require('load-grunt-tasks') grunt
+
+  # Load custom tasks
+  require('./lib/tasks/database') grunt
 
   # Define the configuration for all the tasks
   grunt.initConfig
@@ -296,10 +293,6 @@ module.exports = (grunt) ->
       done()
       return
     ), 1000
-    return
-
-  grunt.registerTask 'express-keepalive', 'Keep grunt running', ->
-    @async()
     return
 
   grunt.registerTask 'serve', (target) ->
