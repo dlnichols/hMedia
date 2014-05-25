@@ -37,7 +37,7 @@ module.exports = exports =
         if err
           next err
         else
-          res.json archives || []
+          res.send archives || []
 
   ###
   # create
@@ -49,7 +49,7 @@ module.exports = exports =
         if err
           next err
         else
-          res.json archive
+          res.send archive
 
   ###
   # show
@@ -60,7 +60,7 @@ module.exports = exports =
         next err
       else
         if archive
-          res.json archive
+          res.send archive
         else
           res.send 404
 
@@ -78,7 +78,7 @@ module.exports = exports =
             if err
               next err
             else
-              res.json archive
+              res.send archive
 
   ###
   # delete
@@ -89,6 +89,6 @@ module.exports = exports =
         next err
       else
         if archive
-          res.json archive
+          res.send archive
         else
           res.send 404

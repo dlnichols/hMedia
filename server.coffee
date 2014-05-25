@@ -29,9 +29,6 @@ require('./lib/models') env
 # Configure Express
 require('./lib/express') app
 
-# Routing
-require('./lib/routes') app
-
 # Errors
 require('./lib/errors') app
 
@@ -39,7 +36,7 @@ require('./lib/errors') app
 require('./lib/mailer') app
 
 # Open database connection
-mongoose.connect env.mongo.uri, env.mongo.options
+#mongoose.connect env.mongo.uri, env.mongo.options
 
 # Start server
 app.listen env.port, ->

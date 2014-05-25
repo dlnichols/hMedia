@@ -32,20 +32,20 @@ module.exports = exports =
       .safeAssign req.body
       .save (err, user) ->
         if err
-          res.json 400, err
+          res.send 400, { error: err.message }
         else
 
         req.logIn user, (err) ->
           if err
-            res.json 400, err
+            res.send 400, { error: err.message }
           else
-            res.json req.user
+            res.send req.user
 
   ###
   # show
   ###
   show: (req, res, next) ->
-    res.json req.user
+    res.send req.user
 
   ###
   # update
@@ -62,7 +62,7 @@ module.exports = exports =
       if user.authenticate('local', oldPass)
         user.password = newPass
         user.save (err) ->
-          return res.send(400) if err
+          return res.send(400, { error: err.message }) if err
 
           res.send(200)
       else
@@ -77,7 +77,7 @@ module.exports = exports =
     # TODO: Check if password from req matches user
     req.user.remove (err, user) ->
       if err
-        res.json 400, err
+        res.send 400, { error: err.message }
       else
         req.logOut()
-        res.json 200
+        res.send 200

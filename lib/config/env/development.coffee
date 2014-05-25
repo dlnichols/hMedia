@@ -13,5 +13,6 @@
 ###
 module.exports = exports =
   env: 'development'
+  logger: 'dev'
   mongo:
     uri: 'mongodb://localhost/h_media-dev'

@@ -12,6 +12,9 @@
 # External libs
 debug = require('debug') 'hMedia:errors'
 
+# Internal libs
+env = require './config/environment'
+
 ###
 # Handlers for various errors
 ###
@@ -22,14 +25,15 @@ module.exports = exports = (app) ->
     # indicate nothing exists at that URI
     if err.type == "ObjectId" and err.path == "_id"
       debug err.message
-      res.json 404
+      res.send 404
     else
       next err
 
   # Generic error handler - our last line of defense
   genericError = (err, req, res, next) ->
-    debug 'Uncaught error: ' + err.message
-    res.send 500, err
+    if env.isDevelopment()
+      debug 'Uncaught error:\n' + err.stack
+    res.send 500, { error: err.message }
 
   app.use badRequest
   app.use genericError

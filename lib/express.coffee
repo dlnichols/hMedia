@@ -10,16 +10,21 @@
 'use strict'
 
 # External libs
-path       = require 'path'
-express    = require 'express'
-session    = require 'express-session'
-mongoStore = require('connect-mongo') session
-debug      = require('debug') 'hMedia:express'
+path    = require 'path'
+express = require 'express'
+session = require 'express-session'
+logger  = require 'morgan'
+parser  = require 'body-parser'
+cookies = require 'cookie-parser'
+mongo   = require('connect-mongo') session
+debug   = require('debug') 'hMedia:express'
 
 # Internal libs
-env        = require './config/environment'
-passport   = require './config/passport'
-errors     = require './errors'
+env      = require './config/environment'
+errors   = require './errors'
+routes   = require './routes'
+
+basic = require './controllers/basic'
 
 ###
 # disableCache
@@ -44,40 +49,32 @@ module.exports = exports = (app) ->
   app.enable 'trust proxy'
 
   # Development specific config
-  app.configure 'development', ->
+  #app.configure 'development', ->
+  if env.isDevelopment()
     app.use require('connect-livereload')()
     app.use disableCache
     app.use express.static(path.join(env.root, '.tmp'))
     app.use express.static(path.join(env.root, 'app'))
     app.set 'views', env.root + '/app/views'
-    return
 
   # Config for all environments
-  app.configure ->
-    app.engine 'html', require('ejs').renderFile
-    app.set 'view engine', 'html'
-    app.use express.logger('dev')
-    app.use express.json()
-    app.use express.urlencoded()
-    app.use express.methodOverride()
-    app.use express.cookieParser()
+  app.engine 'html', require('ejs').renderFile
+  app.set 'view engine', 'html'
+  app.use logger(env.logger or 'default')
+  app.use parser.json()
+  app.use cookies()
 
-    # Persist sessions with mongoStore
-    app.use express.session \
-      secret: require('./config/secrets/session').secret
-      store: new mongoStore(
-        url: env.mongo.uri
-        collection: 'sessions'
-      , ->
-        debug 'Mongo connection for session storage open.'
-      )
+  # Persist sessions with mongo
+  app.use session \
+    secret: require('./config/secrets/session').secret
+    store: new mongo(
+      url: env.mongo.uri
+      collection: 'sessions'
+    , ->
+      debug 'Mongo connection for session storage open.'
+    )
 
-    # Use passport (and passport session)
-    app.use passport.initialize()
-    app.use passport.session()
-
-    # Router
-    app.use app.router
-    return
+  # Router
+  routes app
 
   return
