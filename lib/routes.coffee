@@ -19,46 +19,43 @@ basic          = require './controllers/basic'
 users          = require './controllers/users'
 archives       = require './controllers/archives'
 authentication = require './controllers/authentication'
-mw             = require './middleware'
 
-debug 'Configuring routes...'
+# Middleware
+isAuthenticated  = require './middleware/is_authenticated'
+notAuthenticated = require './middleware/not_authenticated'
+isAuthorized     = require './middleware/is_authorized'
+setUserCookie    = require './middleware/set_user_cookie'
 
 ###
 # Application routes
 ###
-module.exports = exports = (app) ->
-  ###
-  # notFound
-  #
-  # Return 404 error
-  ###
-  notFound = (req, res) ->
-    res.send 404
+debug 'Configuring routes...'
 
+module.exports = exports = (app) ->
   ###
   # Server API Routes
   ###
   # User is a singleton route
-#  app.post   '/api/user', mw.notAuthenticated, users.create
-#  app.get    '/api/user', mw.authenticated,    users.show
-#  app.put    '/api/user', mw.authenticated,    users.update
-#  app.delete '/api/user', mw.authenticated,    users.delete
+  app.post   '/api/user', notAuthenticated, users.create
+  app.get    '/api/user', isAuthenticated,  users.show
+  app.put    '/api/user', isAuthenticated,  users.update
+  app.delete '/api/user', isAuthenticated,  users.delete
 
   # Archives
-#  app.get    '/api/archives',     mw.authenticated, mw.authorized, archives.index
-#  app.post   '/api/archives',     mw.authenticated, mw.authorized, archives.create
-#  app.get    '/api/archives/:id', mw.authenticated, mw.authorized, archives.show
-#  app.put    '/api/archives/:id', mw.authenticated, mw.authorized, archives.update
-#  app.delete '/api/archives/:id', mw.authenticated, mw.authorized, archives.delete
+  app.get    '/api/archives',     isAuthenticated, isAuthorized, archives.index
+  app.post   '/api/archives',     isAuthenticated, isAuthorized, archives.create
+  app.get    '/api/archives/:id', isAuthenticated, isAuthorized, archives.show
+  app.put    '/api/archives/:id', isAuthenticated, isAuthorized, archives.update
+  app.delete '/api/archives/:id', isAuthenticated, isAuthorized, archives.delete
 
   # All undefined api routes should return a 404
-#  app.get '/api/*', notFound
+  app.get '/api/*', basic.notFound
 
   ###
   # Authentication routing
   ###
-#  app.post   '/auth', authentication.login
-#  app.delete '/auth', authentication.logout
+  app.post   '/auth', authentication.login
+  app.delete '/auth', authentication.logout
 
   ###
   # Partials
@@ -73,6 +70,6 @@ module.exports = exports = (app) ->
   #
   # Anything not handled by any other route should serve the application page.
   ###
-  app.get '/*', mw.setUserCookie, basic.index
+  app.get '/*', setUserCookie, basic.index
 
   return

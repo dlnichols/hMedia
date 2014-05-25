@@ -24,26 +24,14 @@ env      = require './config/environment'
 errors   = require './errors'
 routes   = require './routes'
 
-basic = require './controllers/basic'
-
-###
-# disableCache
-#
-# Function to disable caching
-# TODO: Consider exporting this to middleware module
-###
-disableCache = (req, res, next) ->
-  if req.url.indexOf('/scripts/') == 0
-    res.header 'Cache-Control', 'no-cache, no-store, must-revalidate'
-    res.header 'Pragma', 'no-cache'
-    res.header 'Expires', 0
-  next()
-
-debug 'Configuring express...'
+# Middleware
+disableCache = require './middleware/disable_cache'
 
 ###
 # Express configuration
 ###
+debug 'Configuring express...'
+
 module.exports = exports = (app) ->
   # Inform express that it is behind a reverse proxy
   app.enable 'trust proxy'
@@ -73,8 +61,5 @@ module.exports = exports = (app) ->
     , ->
       debug 'Mongo connection for session storage open.'
     )
-
-  # Router
-  routes app
 
   return

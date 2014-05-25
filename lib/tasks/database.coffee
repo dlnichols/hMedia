@@ -13,8 +13,6 @@
 # External libs
 debug = require('debug') 'hMedia:grunt:database'
 
-debug 'Configuring grunt database tasks...'
-
 ###
 # openMongo
 #
@@ -23,6 +21,11 @@ debug 'Configuring grunt database tasks...'
 openMongo = (mongoose) ->
   env = require('../config/environment')
   mongoose.connect env.mongo.uri, env.mongo.options unless mongoose.connection.readyState
+
+###
+# Grunt database tasks
+###
+debug 'Configuring grunt database tasks...'
 
 module.exports = (grunt) ->
   ###

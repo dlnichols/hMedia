@@ -14,8 +14,6 @@ _        = require 'lodash'
 mongoose = require 'mongoose'
 debug    = require('debug') 'hMedia:controllers:archive'
 
-debug 'Configuring archives controller...'
-
 # Retrieve our model from mongoose
 Archive = mongoose.model 'Archive'
 
@@ -24,6 +22,8 @@ Archive = mongoose.model 'Archive'
 #
 # Define the basic CRUD actions for the archive resource
 ###
+debug 'Configuring archives controller...'
+
 module.exports = exports =
   ###
   # index

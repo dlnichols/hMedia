@@ -13,8 +13,6 @@
 mongoose = require 'mongoose'
 debug    = require('debug') 'hMedia:controllers:user'
 
-debug 'Configuring users controller...'
-
 # Retrieve our model from mongoose
 User = mongoose.model 'User'
 
@@ -23,6 +21,8 @@ User = mongoose.model 'User'
 #
 # Define the basic CRUD actions for the user resource
 ###
+debug 'Configuring users controller...'
+
 module.exports = exports =
   ###
   # create

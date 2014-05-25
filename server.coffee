@@ -29,6 +29,9 @@ require('./lib/models') env
 # Configure Express
 require('./lib/express') app
 
+# Application Routes
+require('./lib/routes') app
+
 # Errors
 require('./lib/errors') app
 

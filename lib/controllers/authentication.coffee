@@ -13,13 +13,13 @@
 passport = require 'passport'
 debug    = require('debug') 'hMedia:controllers:authentication'
 
-debug 'Configuring authentication controllers...'
-
 ###
 # Authentication controller
 #
 # Define the login/logout actions
 ###
+debug 'Configuring authentication controllers...'
+
 module.exports = exports =
   ###
   # login

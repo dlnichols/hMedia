@@ -13,14 +13,14 @@ _      = require 'lodash'
 mailer = require 'nodemailer'
 debug  = require('debug') 'hMedia:mailer'
 
-debug 'Configuring mailer...'
-
 # Internal libs
 env = require './config/environment'
 
 ###
 # Mailer extension
 ###
+debug 'Configuring mailer...'
+
 module.exports = exports = (app) ->
   # If app.mailer is defined, then we are reloading and can skip this...
   return if app.mailer

@@ -16,13 +16,13 @@ debug = require('debug') 'hMedia:controllers:basic'
 # Internal libs
 env = require '../config/environment'
 
-debug 'Configuring basic controllers...'
-
 ###
 # Basic controllers
 #
 # These are basic GET actions on /partials/* or /*
 ###
+debug 'Configuring basic controllers...'
+
 module.exports = exports =
   ###
   # Partials
@@ -45,5 +45,13 @@ module.exports = exports =
   #
   # This controller handles the single page app
   ###
-  index: (req, res) ->
+  index: (req, res, next) ->
     res.render 'index'
+
+  ###
+  # Not Found
+  #
+  # This controller handles routes that are not found
+  ###
+  notFound: (req, res, next) ->
+    res.send 404
