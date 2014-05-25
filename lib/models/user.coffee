@@ -16,11 +16,11 @@ mongoose = require 'mongoose'
 crypto   = require 'crypto'
 debug    = require('debug') 'hMedia:models:user'
 
-debug 'Loading user model...'
-
 ###
 # User Schema
 ###
+debug 'Loading user model...'
+
 UserSchema = new mongoose.Schema(
   name: String
   email: String

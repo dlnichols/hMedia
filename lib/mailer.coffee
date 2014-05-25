@@ -13,9 +13,6 @@ _      = require 'lodash'
 mailer = require 'nodemailer'
 debug  = require('debug') 'hMedia:mailer'
 
-# Internal libs
-env = require './config/environment'
-
 ###
 # Mailer extension
 ###

@@ -10,8 +10,7 @@
 'use strict'
 
 # External libs
-passport       = require 'passport'
-debug          = require('debug') 'hMedia:routes'
+debug = require('debug') 'hMedia:routes'
 
 # Internal libs
 env            = require './config/environment'

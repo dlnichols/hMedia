@@ -24,23 +24,21 @@ modelsPath = path.join __dirname, 'models'
 # module.  If given a context, export each model to a property on the context
 # object.  Also add the model to the module exports.
 ###
-requireWithContext = (moduleName, context) ->
+requireModel = (moduleName, context) ->
   return unless moduleName?
   return unless /^(.*)\.(js|coffee)$/.test moduleName
   return unless fs.existsSync(moduleName)
-  module = require moduleName
   exportName = _s.capitalize(path.basename(moduleName).split('.')[0])
   debug 'Loading ' + exportName + ' from ' + moduleName + '...'
-  context[exportName] = module if context?
-  exports[exportName] = module
-
-exports = {}
+  module = require moduleName
+  context[exportName] = module
 
 ###
 # Load our models
 ###
 module.exports = (context) ->
+  models = context or {}
   debug 'Loading models...'
   files = fs.readdirSync(modelsPath)
-  requireWithContext path.join(modelsPath, file), context for file in files
-  exports
+  requireModel path.join(modelsPath, file), models for file in files
+  models

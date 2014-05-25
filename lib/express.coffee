@@ -54,7 +54,7 @@ module.exports = exports = (app) ->
 
   # Persist sessions with mongo
   app.use session \
-    secret: require('./config/secrets/session').secret
+    secret: env.secrets.session
     store: new mongo(
       url: env.mongo.uri
       collection: 'sessions'

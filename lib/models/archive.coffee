@@ -16,11 +16,11 @@ _        = require 'lodash'
 mongoose = require 'mongoose'
 debug    = require('debug') 'hMedia:models:archive'
 
-debug 'Loading archive model...'
-
 ###
 # ArchiveSchema
 ###
+debug 'Loading archive model...'
+
 ArchiveSchema = new mongoose.Schema(
   glacierId: String
   glacierDescription: String

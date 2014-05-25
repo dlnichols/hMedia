@@ -24,6 +24,10 @@ debug = require('debug') 'hMedia:environment'
 ###
 debug 'Loading environment...'
 
-module.exports = exports = _.extend \
+exports = _.extend \
   require('./env/all'),
   require('./env/' + process.env.NODE_ENV) || {}
+
+exports.secrets = require('./secrets') exports.env
+
+module.exports = exports
