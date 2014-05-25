@@ -16,12 +16,12 @@
 # Register the coffee interpreter
 require 'coffee-script/register'
 
+# Load the environment
+env = require './lib/config/environment'
+
 # External libs
 mongoose = require 'mongoose'
 app      = require('express')()
-
-# Load the environment
-env = require './lib/config/environment'
 
 # Load models
 require('./lib/models') env
