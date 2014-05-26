@@ -12,21 +12,16 @@ module.exports = (grunt) ->
   require('time-grunt') grunt
 
   # Load NPM tasks
-  require('load-grunt-tasks') grunt
+  require('jit-grunt') grunt, {
+    express: 'grunt-express-server'
+    useminPrepare: 'grunt-usemin'
+  }
 
   # Load custom tasks
   require('./lib/tasks/database') grunt
 
   # Define the configuration for all the tasks
   grunt.initConfig
-
-    # Project settings
-    yeoman:
-      app:     'app/'
-      lib:     'lib/'
-      tmp:     '.tmp/'
-      dist:    'dist/'
-
     # Express settings
     express:
       # Common options - Start our app with coffee
@@ -56,25 +51,25 @@ module.exports = (grunt) ->
     # Watch settings - WIP
     watch:
       js:
-        files: [ '<%= yeoman.app %>/scripts/**/*.js' ]
+        files: [ 'app/scripts/**/*.js' ]
         tasks: [ 'newer:jshint:serve' ]
         options:
           livereload: true
 
       coffee:
-        files: [ '<%= yeoman.app %>/scripts/**/*.coffee' ]
+        files: [ 'app/scripts/**/*.coffee' ]
         tasks: [ 'newer:coffee:serve' ]
         options:
           livereload: true
 
       compass:
-        files: [ '<%= yeoman.app %>/styles/**/*.scss' ]
+        files: [ 'app/styles/**/*.scss' ]
         tasks: [ 'compass:serve' ]
         options:
           livereload: true
 
       less:
-        files: [ '<%= yeoman.app %>/styles/{,*/}*.less' ]
+        files: [ 'app/styles/{,*/}*.less' ]
         tasks: [ 'newer:less:serve' ]
         options:
           livereload: true
@@ -98,22 +93,22 @@ module.exports = (grunt) ->
     # Clean things up
     clean:
       build:  [
-        '<%= yeoman.tmp %>'
-        '<%= yeoman.dist %>'
+        '.tmp/'
+        'dist/'
       ]
 
       serve: [
-        '<%= yeoman.tmp %>'
+        '.tmp/'
       ]
 
     # Compiles Sass to CSS
     compass:
       options:
-        sassDir:                 '<%= yeoman.app %>/styles/'
-        imagesDir:               '<%= yeoman.app %>/images/'
-        javascriptsDir:          '<%= yeoman.app %>/scripts/'
-        fontsDir:                '<%= yeoman.app %>/fonts/'
-        importPath:              '<%= yeoman.app %>/bower_components/'
+        sassDir:                 'app/styles/'
+        imagesDir:               'app/images/'
+        javascriptsDir:          'app/scripts/'
+        fontsDir:                'app/fonts/'
+        importPath:              'app/bower_components/'
         cssDir:                  '.tmp/styles/'
         generatedImagesDir:      '.tmp/images/generated/'
         httpImagesPath:          '/images/'
@@ -125,7 +120,7 @@ module.exports = (grunt) ->
 
       build:
         options:
-          generatedImagesDir: '<%= yeoman.dist %>/public/images/generated/'
+          generatedImagesDir: 'dist/public/images/generated/'
 
       serve:
         options:
@@ -164,9 +159,9 @@ module.exports = (grunt) ->
     coffee:
       files: [
         expand: true
-        cwd:    '<%= yeoman.app %>/scripts/'
+        cwd:    'app/scripts/'
         src:    [ '**/*.coffee' ]
-        dest:   '<%= yeoman.tmp %>/scripts/'
+        dest:   '.tmp/scripts/'
         ext:    '.js'
         extDot: 'last'
       ]
@@ -180,36 +175,36 @@ module.exports = (grunt) ->
         files: '<%= coffee.files %>'
         options:
           sourceMap: true
-          sourceMapDir: '<%= yeoman.tmp %>/script_maps/'
+          sourceMapDir: '.tmp/script_maps/'
 
     # Renames files for browser caching purposes
     rev:
       files:
-        src: [ '<%= yeoman.dist %>/public/{scripts,styles,images,fonts}/**/*.*' ]
+        src: [ 'dist/public/{scripts,styles,images,fonts}/**/*.*' ]
 
     # Reads HTML for usemin blocks to enable smart builds that automatically
     # concat, minify and revision files. Creates configurations in memory so
     # additional tasks can operate on them
     useminPrepare:
-      html: [ '<%= yeoman.app %>/views/index.html' ]
+      html: [ 'app/views/index.html' ]
       options:
-        dest: '<%= yeoman.dist %>/public'
+        dest: 'dist/public'
 
     # Performs rewrites based on rev and the useminPrepare configuration
     usemin:
-      html: [ '<%= yeoman.dist %>/public/**/*.html' ]
-      css:  [ '<%= yeoman.dist %>/public/styles/**/*.css' ]
+      html: [ 'dist/public/**/*.html' ]
+      css:  [ 'dist/public/styles/**/*.css' ]
       options:
-        assetsDirs: [ '<%= yeoman.dist %>/public/' ]
+        assetsDirs: [ 'dist/public/' ]
 
     # The following *-min tasks produce minified files in the dist folder
     imagemin: # This should only need to be run on generated images in .tmp
       dynamic:
         files: [
           expand: true
-          cwd:  '<%= yeoman.tmp %>/images'
+          cwd:  '.tmp/images'
           src:  [ '**/*.{png,jpg,jpeg,gif}' ]
-          dest: '<%= yeoman.dist %>/public/images'
+          dest: 'dist/public/images'
         ]
         options:
           cache: false
@@ -218,9 +213,9 @@ module.exports = (grunt) ->
       dynamic:
         files: [
           expand: true
-          cwd:  '<%= yeoman.app %>/images/'
+          cwd:  'app/images/'
           src:  '**/*.svg'
-          dest: '<%= yeoman.dist %>/public/images/'
+          dest: 'dist/public/images/'
         ]
 
     htmlmin:
@@ -233,9 +228,9 @@ module.exports = (grunt) ->
 
         files: [
           expand: true
-          cwd:  '<%= yeoman.app %>/views/'
+          cwd:  'app/views/'
           src:  '**/*.html'
-          dest: '<%= yeoman.dist %>/public/'
+          dest: 'dist/public/'
         ]
 
     # Allow the use of non-minsafe AngularJS files. Automatically makes it
@@ -258,15 +253,15 @@ module.exports = (grunt) ->
             'server.coffee'
             'lib/**/*'
           ]
-          dest: '<%= yeoman.dist %>'
+          dest: 'dist/'
         ]
 
       images:
         files: [
           expand: true
-          cwd:  '<%= yeoman.app %>/images/'
+          cwd:  'app/images/'
           src:  '**/*'
-          dest: '<%= yeoman.dist %>/public/images/'
+          dest: 'dist/public/images/'
         ]
 
     # Run some tasks in parallel to speed up the build process
@@ -282,6 +277,15 @@ module.exports = (grunt) ->
         'compass:serve'
         'newer:less:serve'
         'newer:coffee:serve'
+      ]
+
+    # Run mocha tests
+    mochaTest:
+      options:
+        reporter: 'spec'
+        require: 'coffee-script/register'
+      src: [
+        'test/mocha/**/*.coffee'
       ]
 
   # Used for delaying livereload until after server has restarted
@@ -316,6 +320,10 @@ module.exports = (grunt) ->
     'copy'
     'rev'
     'usemin'
+  ]
+
+  grunt.registerTask 'test', [
+    'mochaTest'
   ]
 
   grunt.registerTask 'default', [
