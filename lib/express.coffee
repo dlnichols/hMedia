@@ -21,6 +21,7 @@ debug   = require('debug') 'hMedia:express'
 
 # Internal libs
 env      = require './config/environment'
+passport = require './passport'
 errors   = require './errors'
 routes   = require './routes'
 
@@ -61,5 +62,9 @@ module.exports = exports = (app) ->
     , ->
       debug 'Mongo connection for session storage open.'
     )
+
+  # Load passport
+  app.use passport.initialize()
+  app.use passport.session()
 
   return

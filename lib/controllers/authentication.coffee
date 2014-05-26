@@ -25,18 +25,12 @@ module.exports = exports =
   # login
   ###
   login: (req, res, next) ->
-    passport.authenticate('local', (err, user, info) ->
-      error = err or info
-      return res.send(401, { error: error }) if error
-
-      req.logIn user, (err) ->
-        return res.send(err) if err
-        res.send req.user.userInfo
-    )(req, res, next)
+    debug 'Login not implemented.'
+    res.send 200
 
   ###
   # logout
   ###
   logout: (req, res) ->
-    req.logout()
+    debug 'Logout not implemented.'
     res.send 200
