@@ -17,7 +17,7 @@
 require 'coffee-script/register'
 
 # Load the environment
-env = require './lib/config/environment'
+env = require './lib/bootstrap'
 
 # External libs
 mongoose = require 'mongoose'
@@ -37,9 +37,6 @@ require('./lib/errors') app
 
 # Setup the mailer
 require('./lib/mailer') app
-
-# Open database connection
-#mongoose.connect env.mongo.uri, env.mongo.options
 
 # Start server
 app.listen env.port, ->

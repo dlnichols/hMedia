@@ -19,7 +19,7 @@ rootPath = path.normalize(__dirname + '/../../..')
 ###
 module.exports = exports =
   root: rootPath
-  port: process.env.PORT or 9000
+  port: process.env.PORT or 3000
   mongo:
     options:
       db:
