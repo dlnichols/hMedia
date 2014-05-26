@@ -31,8 +31,8 @@ module.exports = (grunt) ->
     express:
       # Common options - Start our app with coffee
       options:
-        cmd:  'coffee'
         port: env.port
+        opts: [ './node_modules/.bin/coffee' ]
 
       # Dev options - Set dev env and debug vars
       dev:
