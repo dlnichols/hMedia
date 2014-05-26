@@ -1,3 +1,11 @@
+###
+# Gruntfile.js
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# Do our grunt work!
+###
 'use strict'
 
 # Require coffee-script/register so that require uses the project version of
@@ -5,288 +13,30 @@
 require 'coffee-script/register'
 
 module.exports = (grunt) ->
-  # Load our environment settings
-  env = require './lib/config/environment'
+  _ = require 'lodash'
 
   # Time how long tasks take to analyze / optimize
   require('time-grunt') grunt
 
   # Load NPM tasks
-  require('jit-grunt') grunt, {
+  require('jit-grunt') grunt,
     express: 'grunt-express-server'
     useminPrepare: 'grunt-usemin'
-  }
 
   # Load custom tasks
-  require('./lib/tasks/database') grunt
+  # TODO: DB tasks need to be refactored to work with JIT
+  #require('./lib/tasks/database') grunt
+
+  # Load Grunt config
+  # TODO: Fork load-grunt-config and make it JIT for configs?
+  gruntConfig = _.extend(
+    require('load-grunt-config') grunt,
+      loadGruntTasks: false
+    require './grunt/custom/min'
+  )
 
   # Define the configuration for all the tasks
-  grunt.initConfig
-    # Express settings
-    express:
-      # Common options - Start our app with coffee
-      options:
-        port: env.port
-        opts: [ './node_modules/.bin/coffee' ]
-
-      # Dev options - Set dev env and debug vars
-      dev:
-        options:
-          script:   'server.coffee'
-          debug:    true
-          node_env: 'development'
-
-      # Prod options - Set prod env and no debug
-      prod:
-        options:
-          script:   'dist/server.coffee'
-          debug:    false
-          node_env: 'production'
-
-    # Command to open the browser
-    open:
-      serve:
-        url: 'http://localhost:' + env.port
-
-    # Watch settings - WIP
-    watch:
-      js:
-        files: [ 'app/scripts/**/*.js' ]
-        tasks: [ 'newer:jshint:serve' ]
-        options:
-          livereload: true
-
-      coffee:
-        files: [ 'app/scripts/**/*.coffee' ]
-        tasks: [ 'newer:coffee:serve' ]
-        options:
-          livereload: true
-
-      compass:
-        files: [ 'app/styles/**/*.scss' ]
-        tasks: [ 'compass:serve' ]
-        options:
-          livereload: true
-
-      less:
-        files: [ 'app/styles/{,*/}*.less' ]
-        tasks: [ 'newer:less:serve' ]
-        options:
-          livereload: true
-
-      gruntfile:
-        files: [ 'Gruntfile.js' ]
-
-      express:
-        files: [
-          'server.coffee'
-          'lib/**/*.coffee'
-        ]
-        tasks: [
-          'express:dev'
-          'wait'
-        ]
-        options:
-          livereload: true
-          nospawn:    true
-
-    # Clean things up
-    clean:
-      build:  [
-        '.tmp/'
-        'dist/'
-      ]
-
-      serve: [
-        '.tmp/'
-      ]
-
-    # Compiles Sass to CSS
-    compass:
-      options:
-        sassDir:                 'app/styles/'
-        imagesDir:               'app/images/'
-        javascriptsDir:          'app/scripts/'
-        fontsDir:                'app/fonts/'
-        importPath:              'app/bower_components/'
-        cssDir:                  '.tmp/styles/'
-        generatedImagesDir:      '.tmp/images/generated/'
-        httpImagesPath:          '/images/'
-        httpGeneratedImagesPath: '/images/generated/'
-        httpFontsPath:           '/styles/fonts/'
-        relativeAssets:          false
-        assetCacheBuster:        false
-        raw:                     'Sass::Script::Number.precision = 10\n'
-
-      build:
-        options:
-          generatedImagesDir: 'dist/public/images/generated/'
-
-      serve:
-        options:
-          debugInfo: true
-
-    # Compile LESS to CSS
-    less:
-      build:
-        files: [
-          expand: true
-          cwd:    'app/styles/'
-          src:    [ '*.less' ]
-          dest:   '.tmp/styles/'
-          ext:    '.css'
-          extDot: 'last'
-        ]
-        options:
-          sourceMap: false
-
-      serve:
-        files: [
-          expand: true
-          cwd:    'app/styles/'
-          src:    [ '*.less' ]
-          dest:   '.tmp/styles/'
-          ext:    '.css'
-          extDot: 'last'
-        ]
-        options:
-          sourceMap: true
-          sourceMapFilename: ''
-          sourceMapBasepath: ''
-          sourceMapRootpath: '/'
-
-    # Compile Coffee to JS
-    coffee:
-      files: [
-        expand: true
-        cwd:    'app/scripts/'
-        src:    [ '**/*.coffee' ]
-        dest:   '.tmp/scripts/'
-        ext:    '.js'
-        extDot: 'last'
-      ]
-
-      build:
-        files: '<%= coffee.files %>'
-        options:
-          sourceMap: false
-
-      serve:
-        files: '<%= coffee.files %>'
-        options:
-          sourceMap: true
-          sourceMapDir: '.tmp/script_maps/'
-
-    # Renames files for browser caching purposes
-    rev:
-      files:
-        src: [ 'dist/public/{scripts,styles,images,fonts}/**/*.*' ]
-
-    # Reads HTML for usemin blocks to enable smart builds that automatically
-    # concat, minify and revision files. Creates configurations in memory so
-    # additional tasks can operate on them
-    useminPrepare:
-      html: [ 'app/views/index.html' ]
-      options:
-        dest: 'dist/public'
-
-    # Performs rewrites based on rev and the useminPrepare configuration
-    usemin:
-      html: [ 'dist/public/**/*.html' ]
-      css:  [ 'dist/public/styles/**/*.css' ]
-      options:
-        assetsDirs: [ 'dist/public/' ]
-
-    # The following *-min tasks produce minified files in the dist folder
-    imagemin: # This should only need to be run on generated images in .tmp
-      dynamic:
-        files: [
-          expand: true
-          cwd:  '.tmp/images'
-          src:  [ '**/*.{png,jpg,jpeg,gif}' ]
-          dest: 'dist/public/images'
-        ]
-        options:
-          cache: false
-
-    svgmin:
-      dynamic:
-        files: [
-          expand: true
-          cwd:  'app/images/'
-          src:  '**/*.svg'
-          dest: 'dist/public/images/'
-        ]
-
-    htmlmin:
-      build:
-        options:
-          collapseWhitespace: true
-          #collapseBooleanAttributes: true,
-          removeCommentsFromCDATA: true
-          #removeOptionalTags: true
-
-        files: [
-          expand: true
-          cwd:  'app/views/'
-          src:  '**/*.html'
-          dest: 'dist/public/'
-        ]
-
-    # Allow the use of non-minsafe AngularJS files. Automatically makes it
-    # minsafe compatible so Uglify does not destroy the ng references
-    ngmin:
-      build:
-        files: [
-          expand: true
-          cwd:  '.tmp/concat/scripts/'
-          src:  'application.js'
-          dest: '.tmp/concat/scripts/'
-        ]
-
-    # Copy pre-processed files from app to dist
-    copy:
-      lib:
-        files: [
-          expand: true
-          src: [
-            'server.coffee'
-            'lib/**/*'
-          ]
-          dest: 'dist/'
-        ]
-
-      images:
-        files: [
-          expand: true
-          cwd:  'app/images/'
-          src:  '**/*'
-          dest: 'dist/public/images/'
-        ]
-
-    # Run some tasks in parallel to speed up the build process
-    concurrent:
-      build: [
-        'compass:build'
-        'newer:less:build'
-        'newer:coffee:build'
-        'copy'
-        'htmlmin'
-      ]
-      serve: [
-        'compass:serve'
-        'newer:less:serve'
-        'newer:coffee:serve'
-      ]
-
-    # Run mocha tests
-    mochaTest:
-      options:
-        reporter: 'spec'
-        require: 'coffee-script/register'
-      src: [
-        'test/mocha/**/*.coffee'
-      ]
+  grunt.initConfig gruntConfig
 
   # Used for delaying livereload until after server has restarted
   grunt.registerTask 'wait', ->

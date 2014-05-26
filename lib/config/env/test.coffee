@@ -13,6 +13,6 @@
 ###
 module.exports = exports =
   env: 'test'
-  port: 3001
+  port: process.env.PORT or 3001
   mongo:
     uri: 'mongodb://localhost/h_media-test'
