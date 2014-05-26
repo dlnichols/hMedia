@@ -64,12 +64,6 @@
     "connect-livereload": "0.4.0"
   },
   "engines": {
-    "node": ">=0.10.0"
-  },
-  "scripts": {
-    "test": "grunt test"
-  },
-  "directories": {
-    "test": "test"
+    "node": ">=0.10.28"
   }
 }
