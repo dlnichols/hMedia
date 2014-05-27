@@ -13,7 +13,7 @@
     "url": "https://github.com/dlnichols/h_media/issues"
   },
   "scripts": {
-    "test": "NODE_ENV=test grunt mochaTest"
+    "test": "NODE_ENV=test grunt test"
   },
   "dependencies": {
     "async": "0.9.0",

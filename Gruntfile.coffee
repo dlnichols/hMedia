@@ -74,6 +74,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test', [
     'mochaTest'
+    'open:coverage'
   ]
 
   grunt.registerTask 'default', [
