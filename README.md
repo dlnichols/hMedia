@@ -8,6 +8,17 @@ Stack
 ======
 MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS
 
+Test
+====
+To run tests:
+    npm test
+which is an alias (in package.json) to
+    NODE_ENV=test grunt test
+
+Running tests without the env var will cause it to mess with the dev database.
+While this isn't the end of the world, it can cause data loss and the tests
+may act funny with existing data.
+
 License
 =======
 MIT License
