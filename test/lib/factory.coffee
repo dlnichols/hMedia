@@ -11,7 +11,8 @@
 ###
 
 # External libs
-_ = require 'lodash'
+_       = require 'lodash'
+deasync = require 'deasync'
 
 # Store our factory definitions here
 factories = {}
@@ -99,14 +100,22 @@ create = (name, attributes, callback) ->
     callback = attributes
     attributes = {}
 
-  # Call build with save as the callback
-  build name, attributes, (model) ->
+  # Call build, then save the model
+  model = build name, attributes
+  if callback
     model.save (err) ->
       throw err if err
-      if callback
-        callback model
-      else
-        model
+      callback(model)
+    null
+  else
+    # Deasync
+    done = false
+    model.save (err) ->
+      throw err if err
+      done = true
+    while !done
+      deasync.runLoopOnce()
+    model
 
 ###
 # Factory.assoc

@@ -56,6 +56,17 @@ describe 'Helper - Factory', ->
       Factory.define.bind(null, 'name', dummy: true).should.not.throw
 
   describe 'Method build', ->
+    it 'should return the model when called synchronously', ->
+      model = Factory.build 'static'
+      should.exist model
+      (model instanceof Static).should.be.true
+
+    it 'should pass the model when call asynchronously', (done) ->
+      Factory.build 'static', (model) ->
+        should.exist model
+        (model instanceof Static).should.be.true
+        done()
+
     it 'should provide a dummy/stub factory class', ->
       model = Factory.build 'dummy', dummy: true
       (model instanceof Factory.dummy).should.be.true
@@ -95,6 +106,17 @@ describe 'Helper - Factory', ->
       model.monkey.name.should.eql 'Monkey'
 
   describe 'Method create', ->
+    it 'should return the model when called synchronously', ->
+      model = Factory.create 'static'
+      should.exist model
+      (model instanceof Static).should.be.true
+
+    it 'should pass the model when call asynchronously', (done) ->
+      Factory.create 'static', (model) ->
+        should.exist model
+        (model instanceof Static).should.be.true
+        done()
+
     it 'should build and save the model', ->
       model = Factory.create 'static'
       (model instanceof Static).should.be.true
