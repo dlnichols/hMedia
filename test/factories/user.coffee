@@ -21,6 +21,7 @@ Factory.define 'user', User,
     'test' + emailCounter++ + '@test.com'
   password: ->
     Faker.Lorem.words().join ''
-  provider: 'local'
+  providers: [ 'local' ]
+  role: 'guest'
 
 module.exports = Factory

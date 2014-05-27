@@ -24,7 +24,14 @@ describe 'Model - User', ->
   before (done) ->
     User.remove done
 
-  describe 'Method Save', ->
+  describe 'Assignment', ->
+    it 'should provide a whitelist of attributes', ->
+      user = Factory.create('user')
+      user.safeAssign invalid: 'attribute'
+      should.not.exist user.invalid
+      user.isModified().should.be.false
+
+  describe 'Saving/Validation', ->
     it 'should save valid users', (done) ->
       user = Factory.build('user')
       user.save (err) ->
@@ -39,6 +46,21 @@ describe 'Model - User', ->
         dupe.save (err) ->
           should.exist err
           done()
+
+    it 'should not allow blank emails', (done) ->
+      user = Factory.build('user', email: '')
+      user.save (err) ->
+        should.exist err
+        done()
+
+  describe 'Confirmation', ->
+    it 'should be confirmable', (done) ->
+      user = Factory.build('user')
+      user.isConfirmed().should.be.false
+      user.confirm ->
+        user.isConfirmed().should.be.true
+        user.isModified().should.be.false
+        done()
 
   # Clean up by removing all users after each test case
   afterEach (done) ->

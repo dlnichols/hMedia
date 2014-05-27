@@ -37,7 +37,6 @@ UserSchema = new mongoose.Schema(
     default: Date.now
   confirmedAt:
     type: Date
-    default: Date.now
   updatedAt:
     type: Date
     default: Date.now
@@ -175,6 +174,15 @@ UserSchema.methods =
   ###
   isConfirmed: ->
     !!@confirmedAt
+
+  ###
+  # confirm
+  #
+  # @api public
+  ###
+  confirm: (done) ->
+    @confirmedAt = Date.now()
+    @save done
 
   ###
   # Encrypt password
