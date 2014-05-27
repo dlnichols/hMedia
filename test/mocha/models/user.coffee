@@ -9,7 +9,7 @@
 'use strict'
 
 # External libs
-should   = require 'should'
+should = require('chai').should()
 
 # Internal libs
 require '../../../lib/bootstrap'

@@ -8,10 +8,22 @@
 ###
 
 module.exports =
-  # Run mocha tests
-  options:
-    reporter: 'spec'
-    require: 'coffee-script/register'
-  src: [
-    'test/mocha/**/*.coffee'
-  ]
+  test:
+    # Run mocha tests
+    options:
+      reporter: 'spec'
+      require: [
+        'coffee-script/register'
+        'test/coverage/blanket'
+      ]
+    src: [
+      'test/mocha/**/*.coffee'
+    ]
+  coverage:
+    options:
+      reporter:    'html-cov'
+      quiet:       true
+      captureFile: 'test/coverage/results.html'
+    src: [
+      'test/mocha/**/*.coffee'
+    ]
