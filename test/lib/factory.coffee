@@ -12,6 +12,8 @@
 
 # External libs
 _       = require 'lodash'
+fs      = require 'fs'
+path    = require 'path'
 deasync = require 'deasync'
 
 # Store our factory definitions here
@@ -60,6 +62,14 @@ build = (name, attributes, callback) ->
   if typeof attributes is 'function'
     callback = attributes
     attributes = {}
+
+  # Attempt to lazy load the model if it does not exist, else throw an error
+  unless factories[name]?
+    factoryName = path.join __dirname, '..', 'factories', name + '.coffee'
+    if fs.existsSync factoryName
+      require factoryName
+    else
+      throw new Error('No factory named ' + name  + ' exists')
 
   # Create the new model
   model = new factories[name].model

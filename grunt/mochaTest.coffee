@@ -19,11 +19,11 @@ module.exports =
     src: [
       'test/mocha/**/*.coffee'
     ]
-  coverage:
-    options:
-      reporter:    'html-cov'
-      quiet:       true
-      captureFile: 'test/coverage/results.html'
-    src: [
-      'test/mocha/**/*.coffee'
-    ]
+  #coverage:
+  #  options:
+  #    reporter:    'html-cov'
+  #    quiet:       true
+  #    captureFile: 'test/coverage/results.html'
+  #  src: [
+  #    'test/mocha/**/*.coffee'
+  #  ]

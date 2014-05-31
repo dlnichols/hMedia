@@ -24,6 +24,7 @@ loadEnv = (context) ->
 
   # Load our models and attach them to the context
   require('./lib/models') context
+  context.Factory = require('./test/lib/factory')
 
   # Connect to mongo
   context.mongoose.connect context.env.mongo.uri, context.env.mongo.options

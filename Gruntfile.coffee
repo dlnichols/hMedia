@@ -51,10 +51,10 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'serve', (target) ->
     grunt.task.run [
-      'concurrent:serve'
+      #'concurrent:serve'
       'express:dev'
       'wait'
-      'open'
+      'open:serve'
       'watch'
     ]
     null
@@ -74,7 +74,6 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test', [
     'mochaTest'
-    'open:coverage'
   ]
 
   grunt.registerTask 'default', [

@@ -4,7 +4,7 @@
 # © 2014 Dan Nichols
 # See LICENSE for more details
 #
-# This module defines the login/logout actions for authentication, for use in
+# This module defines the logIn/logOut actions for authentication, for use in
 # our express router.
 ###
 'use strict'
@@ -16,21 +16,31 @@ debug    = require('debug') 'hMedia:controllers:authentication'
 ###
 # Authentication controller
 #
-# Define the login/logout actions
+# Define the logIn/logOut actions
 ###
 debug 'Configuring authentication controllers...'
 
 module.exports = exports =
   ###
-  # login
+  # logIn
   ###
-  login: (req, res, next) ->
-    debug 'Login not implemented.'
-    res.send 200
+  logIn: passport.authenticate 'local'
 
   ###
-  # logout
+  # status
   ###
-  logout: (req, res) ->
-    debug 'Logout not implemented.'
-    res.send 200
+  status: (req, res) ->
+    debug 'status isAuthenticated(' + req.isAuthenticated() + ')'
+    res.json 200, req.user
+
+  ###
+  # logOut
+  ###
+  logOut: (req, res) ->
+    debug 'logOut isAuthenticated(' + req.isAuthenticated() + ')'
+    if req.isAuthenticated()
+      req.logOut()
+      debug 'logOut isAuthenticated(' + req.isAuthenticated() + ')'
+      res.json 200, redirect: '/'
+    else
+      res.json 401, error: 'Not logged in'

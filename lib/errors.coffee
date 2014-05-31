@@ -24,8 +24,8 @@ module.exports = exports = (app) ->
     # ObjectId errors are generally malformed URIs, and we return 404 to
     # indicate nothing exists at that URI
     if err.type == "ObjectId" and err.path == "_id"
-      debug err.message
-      res.send 404
+      debug err.stack
+      res.send 404, error: err.stack
     else
       next err
 
@@ -33,7 +33,7 @@ module.exports = exports = (app) ->
   genericError = (err, req, res, next) ->
     if env.isDevelopment()
       debug 'Uncaught error:\n' + err.stack
-    res.send 500, { error: err.message }
+    res.send 500, error: err.stack
 
   app.use badRequest
   app.use genericError

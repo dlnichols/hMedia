@@ -18,6 +18,6 @@ module.exports = (config) ->
     # level of logging - possible: DISABLE,ERROR,WARN,INFO,DEBUG
     logLevel: config.LOG_INFO
     autoWatch: true
-    browsers: [ 'Chrome' ]
+    browsers: [ 'PhantomJS' ]
     captureTimeout: 6000
     singleRun: false

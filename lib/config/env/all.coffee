@@ -20,13 +20,14 @@ rootPath = path.normalize(__dirname + '/../../..')
 module.exports = exports =
   root: rootPath
   port: process.env.PORT or 3000
+  logger: 'default'
   mongo:
     options:
       db:
         safe: true
   isDevelopment: ->
-    @env == 'development'
+    @env is 'development'
   isProduction: ->
-    @env == 'production'
+    @env is 'production'
   isTest: ->
-    @env == 'test'
+    @env is 'test'

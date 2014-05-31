@@ -30,6 +30,6 @@ exports = _.extend \
 
 exports.secrets = require('./secrets') exports.env
 
-process.env.PORT = process.env.PORT or exports.port
+process.env.PORT = exports.port
 
 module.exports = exports

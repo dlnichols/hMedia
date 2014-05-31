@@ -24,4 +24,4 @@ module.exports = exports =
     if req.isAuthenticated()
       next()
     else
-      res.send 401
+      res.json 401, error: 'Not signed in'

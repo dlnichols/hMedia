@@ -10,6 +10,7 @@
 
 # External libs
 should = require('chai').should()
+expect = require('chai').expect
 
 # Internal libs
 Factory = require '../lib/factory.coffee'
@@ -51,74 +52,74 @@ describe 'Helper - Factory', ->
 
   describe 'Method define', ->
     it 'should throw an exception if no attributes are given', ->
-      Factory.define.should.throw 'Invalid arguments'
-      Factory.define.bind(null, 'name').should.throw 'Invalid arguments'
-      Factory.define.bind(null, 'name', dummy: true).should.not.throw
+      expect(Factory.define).to.throw Error, /Invalid arguments/
+      expect(Factory.define.bind(null, 'name')).to.throw Error, /Invalid arguments/
+      expect(Factory.define.bind(null, 'name', dummy: true)).to.not.throw Error
 
   describe 'Method build', ->
     it 'should return the model when called synchronously', ->
       model = Factory.build 'static'
-      should.exist model
-      (model instanceof Static).should.be.true
+      expect(model).to.exist
+      expect(model).to.be.instanceof Static
 
     it 'should pass the model when call asynchronously', (done) ->
       Factory.build 'static', (model) ->
-        should.exist model
-        (model instanceof Static).should.be.true
+        expect(model).to.exist
+        expect(model).to.be.instanceof Static
         done()
 
     it 'should provide a dummy/stub factory class', ->
       model = Factory.build 'dummy', dummy: true
-      (model instanceof Factory.dummy).should.be.true
-      model.name.should.eql 'Dummy'
-      model.dummy.should.eql true
+      expect(model).to.be.instanceof Factory.dummy
+      expect(model.name).to.eql 'Dummy'
+      expect(model.dummy).to.eql true
 
     it 'should build, but not save the model', ->
       model = Factory.build 'static'
-      (model instanceof Static).should.be.true
-      model.name.should.eql 'Monkey'
-      model.age.should.eql 12
-      model.should.not.have.property 'saveCalled'
+      expect(model).to.be.instanceof Static
+      expect(model.name).to.be.eql 'Monkey'
+      expect(model.age).to.be.eql 12
+      expect(model).to.not.have.property 'saveCalled'
 
     it 'should allow overriding and/or adding attributes', ->
       model = Factory.build 'static',
         name: 'Not a monkey'
         foo: 'bar'
-      (model instanceof Static).should.be.true
-      model.name.should.eql 'Not a monkey'
-      model.age.should.eql 12
-      should.exist model.foo
-      model.foo.should.eql 'bar'
-      model.should.not.have.property 'saveCalled'
+      expect(model).to.be.instanceof Static
+      expect(model.name).to.eql 'Not a monkey'
+      expect(model.age).to.eql 12
+      expect(model.foo).to.exist
+      expect(model.foo).to.eql 'bar'
+      expect(model).to.not.have.property 'saveCalled'
 
     it 'should allow synchronous dynamic attributes', ->
       model = Factory.build 'sync'
-      (model instanceof Sync).should.be.true
-      model.name.should.eql 'Synchronous monkey 1'
+      expect(model).to.be.instanceof Sync
+      expect(model.name).to.eql 'Synchronous monkey 1'
       model2 = Factory.build 'sync'
-      (model2 instanceof Sync).should.be.true
-      model2.name.should.eql 'Synchronous monkey 2'
+      expect(model2).to.be.instanceof Sync
+      expect(model2.name).to.eql 'Synchronous monkey 2'
 
     it 'should allow associative attributes', ->
       model = Factory.build 'assoc'
-      (model instanceof Assoc).should.be.true
-      (model.monkey instanceof Static).should.be.true
-      model.monkey.name.should.eql 'Monkey'
+      expect(model).to.be.instanceof Assoc
+      expect(model.monkey).to.be.instanceof Static
+      expect(model.monkey.name).to.eql 'Monkey'
 
   describe 'Method create', ->
     it 'should return the model when called synchronously', ->
       model = Factory.create 'static'
-      should.exist model
-      (model instanceof Static).should.be.true
+      expect(model).to.exist
+      expect(model).to.be.instanceof Static
 
     it 'should pass the model when call asynchronously', (done) ->
       Factory.create 'static', (model) ->
-        should.exist model
-        (model instanceof Static).should.be.true
+        expect(model).to.exist
+        expect(model).to.be.instanceof Static
         done()
 
     it 'should build and save the model', ->
       model = Factory.create 'static'
-      (model instanceof Static).should.be.true
-      model.should.have.property 'saveCalled'
-      model.saveCalled.should.be.true
+      expect(model).to.be.instanceof Static
+      expect(model).to.have.property 'saveCalled'
+      expect(model.saveCalled).to.eql true

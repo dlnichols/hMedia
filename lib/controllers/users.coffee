@@ -32,20 +32,28 @@ module.exports = exports =
       .safeAssign req.body
       .save (err, user) ->
         if err
-          res.send 400, { error: err.message }
+          res.json 400, error: err.message
         else
+          req.logIn user, (err) ->
+            if err
+              res.json 400, error: err.message
+            else
+              res.json 200, req.user
 
-        req.logIn user, (err) ->
-          if err
-            res.send 400, { error: err.message }
-          else
-            res.send req.user
+  ###
+  # index
+  ###
+  index: (req, res, next) ->
+    res.json 501, error: 'User::Index not implemented.'
 
   ###
   # show
   ###
   show: (req, res, next) ->
-    res.send req.user
+    if req.params.id
+      res.json 501, error: 'User::Show(id) not implemented.'
+    else
+      res.json 200, req.user
 
   ###
   # update
@@ -53,20 +61,7 @@ module.exports = exports =
   # Allows for changing user password.
   ###
   update: (req, res, next) ->
-    # TODO: Rewrite this whole thing
-    userId = req.user._id
-    oldPass = String(req.body.oldPassword)
-    newPass = String(req.body.newPassword)
-
-    User.findById userId, (err, user) ->
-      if user.authenticate('local', oldPass)
-        user.password = newPass
-        user.save (err) ->
-          return res.send(400, { error: err.message }) if err
-
-          res.send(200)
-      else
-        res.send(401)
+    res.json 501, error: 'User::Update not implemented.'
 
   ###
   # delete
@@ -74,10 +69,16 @@ module.exports = exports =
   # Allows a user to delete their account.
   ###
   delete: (req, res, next) ->
-    # TODO: Check if password from req matches user
+    # Check that the user password matches
+    unless req.params.password and req.user.authenticate 'local', req.param.password
+      return res.json 401, error: 'Incorrect password'
+
+    # Delete the user from the database
     req.user.remove (err, user) ->
       if err
-        res.send 400, { error: err.message }
+        # Couldn't delete the user
+        res.json 400, error: err.message
       else
+        # Deleted, log them out
         req.logOut()
-        res.send 200
+        res.json 200

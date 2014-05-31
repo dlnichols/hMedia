@@ -23,7 +23,6 @@ authentication = require './controllers/authentication'
 isAuthenticated  = require './middleware/is_authenticated'
 notAuthenticated = require './middleware/not_authenticated'
 isAuthorized     = require './middleware/is_authorized'
-setUserCookie    = require './middleware/set_user_cookie'
 
 ###
 # Application routes
@@ -34,27 +33,23 @@ module.exports = exports = (app) ->
   ###
   # Server API Routes
   ###
-  # User is a singleton route
-  app.post   '/api/user', notAuthenticated, users.create
-  app.get    '/api/user', isAuthenticated,  users.show
-  app.put    '/api/user', isAuthenticated,  users.update
-  app.delete '/api/user', isAuthenticated,  users.delete
+  # All api route requests must be authenticated and authorized
+  app.route '/api/*'
+    .all isAuthenticated
+    .all isAuthorized
 
   # Archives
-  app.get    '/api/archives',     isAuthenticated, isAuthorized, archives.index
-  app.post   '/api/archives',     isAuthenticated, isAuthorized, archives.create
-  app.get    '/api/archives/:id', isAuthenticated, isAuthorized, archives.show
-  app.put    '/api/archives/:id', isAuthenticated, isAuthorized, archives.update
-  app.delete '/api/archives/:id', isAuthenticated, isAuthorized, archives.delete
+  app.route '/api/archives'
+    .get    archives.index
+    .post   archives.create
+  app.route '/api/archives/:id'
+    .get    archives.show
+    .put    archives.update
+    .delete archives.delete
 
   # All undefined api routes should return a 404
-  app.get '/api/*', basic.notFound
-
-  ###
-  # Authentication routing
-  ###
-  app.post   '/auth', authentication.login
-  app.delete '/auth', authentication.logout
+  app.route '/api/*'
+    .all basic.notFound
 
   ###
   # Partials
@@ -67,8 +62,37 @@ module.exports = exports = (app) ->
   ###
   # Base routing
   #
-  # Anything not handled by any other route should serve the application page.
+  # Render the index
+  # If the request is XHR, then basic.index will call next, passing the
+  # request on to the rest of the handlers
   ###
-  app.get '/*', setUserCookie, basic.index
+  app.get '/*', basic.index
+
+  ###
+  # User account routing (singleton)
+  ###
+  app.route '/user'
+    .post   notAuthenticated, users.create
+    .get    isAuthenticated,  users.show
+    .put    isAuthenticated,  users.update
+    .delete isAuthenticated,  users.delete
+
+  ###
+  # Authentication routing
+  ###
+  app.route '/auth'
+    .post   authentication.logIn, authentication.status
+    .get    authentication.status
+    .delete authentication.logOut
+  #app.get    '/auth/facebook',          authentication.facebook
+  #app.get    '/auth/facebook/callback', authentication.facebookCallback
+  #app.get    '/auth/github',            authentication.github
+  #app.get    '/auth/github/callback',   authentication.githubCallback
+  #app.get    '/auth/twitter',           authentication.twitter
+  #app.get    '/auth/twitter/callback',  authentication.twitterCallback
+  #app.get    '/auth/google',            authentication.google
+  #app.get    '/auth/google/callback',   authentication.googleCallback
+  #app.get    '/auth/linkedin',          authentication.linkedin
+  #app.get    '/auth/linkedin/callback', authentication.linkedinCallback
 
   return

@@ -7,10 +7,13 @@
 # Define our express configuration block for grunt
 ###
 
+# Internal libs
+env = require '../lib/config/environment'
+
 module.exports =
   # Common options - Start our app with coffee
   options:
-    port: process.env.PORT
+    port: env.port
     opts: [ './node_modules/.bin/coffee' ]
 
   # Dev options - Set dev env and debug vars

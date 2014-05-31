@@ -46,10 +46,16 @@ module.exports = exports = (app) ->
     app.use express.static(path.join(env.root, 'app'))
     app.set 'views', env.root + '/app/views'
 
+  if env.isTest()
+    app.use express.static(path.join(env.root, '.tmp'))
+    app.use express.static(path.join(env.root, 'app'))
+    app.set 'views', env.root + '/app/views'
+
   # Config for all environments
   app.engine 'html', require('ejs').renderFile
   app.set 'view engine', 'html'
-  app.use logger(env.logger or 'default')
+  if env.logger
+    app.use logger(env.logger)
   app.use parser.json()
   app.use cookies()
 

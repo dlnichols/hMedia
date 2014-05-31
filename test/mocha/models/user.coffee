@@ -9,11 +9,12 @@
 'use strict'
 
 # External libs
-should = require('chai').should()
+expect = require('chai').expect
 
 # Internal libs
 require '../../../lib/bootstrap'
-Factory = require '../../factories/user'
+Factory = require '../../lib/factory'
+#Factory = require '../../factories/user'
 User    = require '../../../lib/models/user'
 
 ###
@@ -28,38 +29,38 @@ describe 'Model - User', ->
     it 'should provide a whitelist of attributes', ->
       user = Factory.create('user')
       user.safeAssign invalid: 'attribute'
-      should.not.exist user.invalid
-      user.isModified().should.be.false
+      expect(user).to.not.have.property 'invalid'
+      expect(user.isModified()).to.be.false
 
   describe 'Saving/Validation', ->
     it 'should save valid users', (done) ->
       user = Factory.build('user')
       user.save (err) ->
-        should.not.exist err
+        expect(err).to.not.exist
         done()
 
     it 'should not allow duplicate emails', (done) ->
       user = Factory.build('user', email: 'dupeme@dupe.com')
       dupe = Factory.build('user', email: 'dupeme@dupe.com')
       user.save (err) ->
-        should.not.exist err
+        expect(err).to.not.exist
         dupe.save (err) ->
-          should.exist err
+          expect(err).to.exist
           done()
 
     it 'should not allow blank emails', (done) ->
       user = Factory.build('user', email: '')
       user.save (err) ->
-        should.exist err
+        expect(err).to.exist
         done()
 
   describe 'Confirmation', ->
     it 'should be confirmable', (done) ->
       user = Factory.build('user')
-      user.isConfirmed().should.be.false
+      expect(user.isConfirmed()).to.be.false
       user.confirm ->
-        user.isConfirmed().should.be.true
-        user.isModified().should.be.false
+        expect(user.isConfirmed()).to.be.true
+        expect(user.isModified()).to.be.false
         done()
 
   # Clean up by removing all users after each test case

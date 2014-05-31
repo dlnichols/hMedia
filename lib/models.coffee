@@ -22,7 +22,7 @@ modelsPath = path.join __dirname, 'models'
 #
 # Take a filename, convert it to a string useable by require, and require the
 # module.  If given a context, export each model to a property on the context
-# object.  Also add the model to the module exports.
+# object.
 ###
 requireModel = (moduleName, context) ->
   return unless moduleName?

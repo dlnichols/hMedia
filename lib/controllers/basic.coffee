@@ -30,7 +30,7 @@ module.exports = exports =
   # This controller handles the /partials
   ###
   partials: (req, res, next) ->
-    throw { message: "Static content should not be handled by Node in production" } if env.isProduction()
+    throw new Error('Static content should not be handled by Node in production') if env.isProduction()
     stripped = req.url.split('.')[0]
     requestedView = path.join('./', stripped)
     res.render requestedView, (err, html) ->
@@ -43,10 +43,15 @@ module.exports = exports =
   ###
   # Index
   #
-  # This controller handles the single page app
+  # This controller handles the single page app, but should only render if the
+  # request was not XHR
   ###
   index: (req, res, next) ->
-    res.render 'index'
+    if not req.xhr and req.accepts('html') is 'html'
+      res.cookie 'user', JSON.stringify(req.user.userInfo) if req.user
+      res.render 'index'
+    else
+      next()
 
   ###
   # Not Found

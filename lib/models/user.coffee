@@ -16,6 +16,9 @@ mongoose = require 'mongoose'
 crypto   = require 'crypto'
 debug    = require('debug') 'hMedia:models:user'
 
+# Internal libs
+env = require '../config/environment'
+
 ###
 # User Schema
 ###
@@ -45,7 +48,7 @@ UserSchema = new mongoose.Schema(
 ###
 # Whitelisting
 ###
-UserSchema.safeFields = [ "name", "email", "password" ]
+UserSchema.safeFields = [ 'name', 'email', 'password' ]
 
 ###
 # Virtual fields
@@ -58,7 +61,10 @@ UserSchema
     @salt = @makeSalt()
     @hashedPassword = @encryptPassword(password)
   .get ->
-    return "[Hidden]"
+    if env.isProduction()
+      '[Hidden]'
+    else
+      @_password
 
 # Basic info to identify the current authenticated user in the app
 UserSchema
@@ -139,13 +145,8 @@ UserSchema.methods =
   # @return {Boolean}
   # @api public
   ###
-  authenticate: (provider, plainText) ->
-    return false if !@hasProvider(provider)
-    switch provider
-      when 'local'
-        @encryptPassword(plainText) == @hashedPassword
-      else
-        false
+  authenticate: (plainText) ->
+    @encryptPassword(plainText) is @hashedPassword
 
   ###
   # hasProvider - check if the user has credentials for the passed provider
