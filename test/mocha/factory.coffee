@@ -42,11 +42,6 @@ describe 'Helper - Factory', ->
       name: ->
         'Synchronous monkey ' + syncCounter++
 
-    asyncCounter = 1
-    Factory.define 'async', Async,
-      name: (callback) ->
-        'Asynchronous monkey ' + asyncCounter++
-
     Factory.define 'assoc', Assoc,
       monkey: Factory.assoc 'static'
 
@@ -55,6 +50,49 @@ describe 'Helper - Factory', ->
       expect(Factory.define).to.throw Error, /Invalid arguments/
       expect(Factory.define.bind(null, 'name')).to.throw Error, /Invalid arguments/
       expect(Factory.define.bind(null, 'name', dummy: true)).to.not.throw Error
+
+  describe 'Method attributesFor', ->
+    it 'should return the attributes when called synchronously', ->
+      attrs = Factory.attributesFor 'static'
+      expect(attrs).to.exist
+      expect(attrs).not.to.be.instanceof Static
+      expect(attrs).to.be.instanceof Object
+
+    it 'should pass attributes when called asynchronously', ->
+      Factory.attributesFor 'static', (attrs) ->
+        expect(attrs).to.exist
+        expect(attrs).not.to.be.instanceof Static
+        expect(attrs).to.be.instanceof Object
+
+    it 'should lazy evaluate synchronous functions', ->
+      attrs = Factory.attributesFor 'sync'
+      expect(attrs.name).to.match /^Synchronous monkey/
+
+    it 'should allow overriding and/or adding attributes', ->
+      attrs = Factory.build 'static',
+        name: 'Not a monkey'
+        foo: 'bar'
+      expect(attrs).to.be.instanceof Static
+      expect(attrs.name).to.eql 'Not a monkey'
+      expect(attrs.age).to.eql 12
+      expect(attrs.foo).to.exist
+      expect(attrs.foo).to.eql 'bar'
+      expect(attrs).to.not.have.property 'saveCalled'
+
+    it 'should allow synchronous dynamic attributes', ->
+      attrs = Factory.build 'sync'
+      expect(attrs).to.be.instanceof Sync
+      expect(attrs.name).to.match /^Synchronous monkey/
+
+      attrs2 = Factory.build 'sync'
+      expect(attrs2).to.be.instanceof Sync
+      expect(attrs2.name).to.match /^Synchronous monkey/
+
+    it 'should allow associative attributes', ->
+      model = Factory.build 'assoc'
+      expect(model).to.be.instanceof Assoc
+      expect(model.monkey).to.be.instanceof Static
+      expect(model.monkey.name).to.eql 'Monkey'
 
   describe 'Method build', ->
     it 'should return the model when called synchronously', ->
@@ -80,31 +118,6 @@ describe 'Helper - Factory', ->
       expect(model.name).to.be.eql 'Monkey'
       expect(model.age).to.be.eql 12
       expect(model).to.not.have.property 'saveCalled'
-
-    it 'should allow overriding and/or adding attributes', ->
-      model = Factory.build 'static',
-        name: 'Not a monkey'
-        foo: 'bar'
-      expect(model).to.be.instanceof Static
-      expect(model.name).to.eql 'Not a monkey'
-      expect(model.age).to.eql 12
-      expect(model.foo).to.exist
-      expect(model.foo).to.eql 'bar'
-      expect(model).to.not.have.property 'saveCalled'
-
-    it 'should allow synchronous dynamic attributes', ->
-      model = Factory.build 'sync'
-      expect(model).to.be.instanceof Sync
-      expect(model.name).to.eql 'Synchronous monkey 1'
-      model2 = Factory.build 'sync'
-      expect(model2).to.be.instanceof Sync
-      expect(model2.name).to.eql 'Synchronous monkey 2'
-
-    it 'should allow associative attributes', ->
-      model = Factory.build 'assoc'
-      expect(model).to.be.instanceof Assoc
-      expect(model.monkey).to.be.instanceof Static
-      expect(model.monkey.name).to.eql 'Monkey'
 
   describe 'Method create', ->
     it 'should return the model when called synchronously', ->

@@ -31,7 +31,10 @@ module.exports = exports =
   ###
   status: (req, res) ->
     debug 'status isAuthenticated(' + req.isAuthenticated() + ')'
-    res.json 200, req.user
+    if req.isAuthenticated()
+      res.json 200, req.user.userInfo
+    else
+      res.json 200, {}
 
   ###
   # logOut
@@ -41,6 +44,5 @@ module.exports = exports =
     if req.isAuthenticated()
       req.logOut()
       debug 'logOut isAuthenticated(' + req.isAuthenticated() + ')'
-      res.json 200, redirect: '/'
-    else
-      res.json 401, error: 'Not logged in'
+
+    res.json 200, redirect: '/'

@@ -22,7 +22,7 @@ factories = {}
 ###
 # Factory.dummy
 #
-# TODO: More descriptive
+# A dummy backing model that stubs important functions
 ###
 dummy = ->
 dummy::save = (callback) ->
@@ -51,6 +51,50 @@ define = (name, model, attributes) ->
     attributes: attributes
 
 ###
+# lazyLoad
+#
+# Attempt to lazy load a factory definition
+# Throws an error if the definition cannot be found
+###
+lazyLoad = (name) ->
+  factoryName = path.join __dirname, '..', 'factories', name + '.coffee'
+  if fs.existsSync factoryName
+    require factoryName
+  else
+    throw new Error('No factory named ' + name  + ' exists')
+
+###
+# Factory.attributesFor
+###
+attributesFor = (name, attributes, callback) ->
+  if typeof attributes is 'function'
+    callback = attributes
+    attributes = {}
+
+  # Lazy load the factory definition, if needed
+  lazyLoad name unless factories[name]?
+
+  # Clone the default attributes
+  newAttrs = _.clone factories[name].attributes
+
+  # Merge the pass attributes to the defaults
+  _.extend newAttrs, attributes
+
+  # Evaluate lazy attributes
+  _.forOwn newAttrs, (fn, key) ->
+    if typeof fn is 'function'
+      if fn.length
+        fn (value) ->
+          newAttrs[key] = value
+      else
+        newAttrs[key] = fn()
+
+  if callback
+    callback newAttrs
+  else
+    newAttrs
+
+###
 # Factory.build
 #
 # Use this to build a model from a factory definition
@@ -63,33 +107,14 @@ build = (name, attributes, callback) ->
     callback = attributes
     attributes = {}
 
-  # Attempt to lazy load the model if it does not exist, else throw an error
-  unless factories[name]?
-    factoryName = path.join __dirname, '..', 'factories', name + '.coffee'
-    if fs.existsSync factoryName
-      require factoryName
-    else
-      throw new Error('No factory named ' + name  + ' exists')
+  # Lazy load the factory definition, if needed
+  lazyLoad name unless factories[name]?
 
   # Create the new model
   model = new factories[name].model
 
-  # Clone the default attributes
-  newAttrs = _.clone factories[name].attributes
-
-  # Merge the passed attributes to the defaults
-  _.extend newAttrs, attributes
-
-  # Inject all attributes to the model, lazy evaluating as needed
-  _.forOwn newAttrs, (fn, key) ->
-    if typeof fn is 'function'
-      if fn.length
-        fn (value) ->
-          model[key] = value
-      else
-        model[key] = fn()
-    else
-      model[key] = fn
+  # Extend it with the defined attributes
+  _.extend model, attributesFor(name, attributes)
 
   # Call the callback with the new model
   if callback
@@ -142,11 +167,12 @@ assoc = (name, attr) ->
 
 
 # Build our export object
-Factory        = create
-Factory.define = define
-Factory.build  = build
-Factory.create = create
-Factory.assoc  = assoc
-Factory.dummy  = dummy
+Factory               = create
+Factory.define        = define
+Factory.build         = build
+Factory.create        = create
+Factory.assoc         = assoc
+Factory.dummy         = dummy
+Factory.attributesFor = attributesFor
 
 module.exports = Factory

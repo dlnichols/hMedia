@@ -38,7 +38,7 @@ module.exports = exports =
             if err
               res.json 400, error: err.message
             else
-              res.json 200, req.user
+              res.json 200, req.user.userInfo
 
   ###
   # index
@@ -53,7 +53,7 @@ module.exports = exports =
     if req.params.id
       res.json 501, error: 'User::Show(id) not implemented.'
     else
-      res.json 200, req.user
+      res.json 200, req.user.userInfo
 
   ###
   # update

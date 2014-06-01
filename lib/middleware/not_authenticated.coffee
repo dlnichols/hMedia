@@ -24,4 +24,4 @@ module.exports = exports =
     unless req.isAuthenticated()
       next()
     else
-      res.send 400
+      res.json 400, error: 'Must be logged out'

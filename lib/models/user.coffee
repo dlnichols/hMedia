@@ -70,8 +70,14 @@ UserSchema
 UserSchema
   .virtual 'userInfo'
   .get ->
-    display:   @name || @email
+    __v:       @__v
+    _id:       @_id
+    email:     @email
+    name:      @name
     role:      @role
+    providers: @providers
+    createdAt: @createdAt
+    updatedAt: @updatedAt
 
 ###
 # Validations

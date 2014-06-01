@@ -20,7 +20,7 @@ User    = require '../../../lib/models/user'
 ###
 # User model test cases
 ###
-describe 'Model - User', ->
+describe '(Model - User)', ->
   # Ensure we are in a clean state by removing all users at start
   before (done) ->
     User.remove done
