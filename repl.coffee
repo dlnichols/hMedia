@@ -37,9 +37,9 @@ loadEnv = (context) ->
   # throwing errors that won't be handled.
   ###
   context.perr = (err, model) ->
-    console.log "Error!" if err
     console.log err if err
     console.log model if model
+    context.result = model if model
 
 # Load the repl module
 myrepl = require 'repl'

@@ -41,8 +41,8 @@ passport.serializeUser (user, done) ->
 # Deserialize the User from the data in the session
 ###
 passport.deserializeUser (id, done) ->
-  # Look up the User by ID, with all but salt and hashedPassword fields
-  User.findOne _id: id, '-salt -hashedPassword', (err, user) ->
+  # Look up the User by ID
+  User.findOne _id: id, null, (err, user) ->
     done err, user
   null
 
@@ -124,8 +124,6 @@ passport.use new GoogleStrategy(
     return done(err) if err
 
     unless user
-      # TODO: Extract this logic to a helper (since all Strategies will do
-      # this, albeit with changes to the User object)
       # No user, create one
       # TODO: Should check for existing email (and link?)
       user = new User(

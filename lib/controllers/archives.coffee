@@ -34,10 +34,8 @@ module.exports = exports =
       .sort {glacierId: 1}
       .limit 20
       .exec (err, archives) ->
-        if err
-          next err
-        else
-          res.send archives || []
+        return next(err) if err
+        res.send archives || []
 
   ###
   # create
@@ -46,49 +44,33 @@ module.exports = exports =
     new Archive()
       .safeAssign req.body
       .save (err, archive) ->
-        if err
-          next err
-        else
-          res.send archive
+        return next(err) if err
+        res.send archive
 
   ###
   # show
   ###
   show: (req, res, next) ->
     Archive.findById req.params.id, (err, archive) ->
-      if err
-        next err
-      else
-        if archive
-          res.send archive
-        else
-          res.send 404
+      return next(err) if err
+      res.send archive
 
   ###
   # update
   ###
   update: (req, res, next) ->
     Archive.findById req.params.id, (err, archive) ->
-      if err
-        next err
-      else
-        archive
-          .safeAssign req.body
-          .save (err, archive) ->
-            if err
-              next err
-            else
-              res.send archive
+      return next(err) if err
+      archive
+        .safeAssign req.body
+        .save (err, archive) ->
+          return next(err) if err
+          res.send archive
 
   ###
   # delete
   ###
   delete: (req, res, next) ->
     Archive.findByIdAndRemove req.params.id, (err, archive) ->
-      if err
-        next err
-      else
-        if archive
-          res.send archive
-        else
-          res.send 404
+      return next(err) if err
+      res.send archive

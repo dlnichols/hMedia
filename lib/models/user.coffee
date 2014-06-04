@@ -27,6 +27,7 @@ debug 'Loading user model...'
 UserSchema = new mongoose.Schema(
   name: String
   email: String
+  confirmedEmail: String
   role:
     type   : String
     default: 'guest'
@@ -89,10 +90,15 @@ UserSchema
     'Email address cannot be blank'
   .validate (value, respond) ->
     self = @
-    @constructor.findOne { email: value }, (err, user) ->
+    @constructor.find $or: [
+      { email: value }
+      { confirmedEmail: value }
+    ], 'email confirmedEmail', (err, users) ->
       throw err if err
-      return respond(self.id == user.id) if user
-      respond(true)
+      if users.length is 0 # New record, we're good
+        respond true
+      else # Record found, check if it is the one we are saving
+        respond users[0].id is self.id
   , 'Email address is already in use'
 
 # Validate password
@@ -188,6 +194,7 @@ UserSchema.methods =
   # @api public
   ###
   confirm: (done) ->
+    @confirmedEmail = @email
     @confirmedAt = Date.now()
     @save done
 

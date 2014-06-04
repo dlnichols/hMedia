@@ -24,8 +24,10 @@ module.exports = (user, action, url, done, options, test) ->
     .send email: user.email, password: user.password
     .expect 200
     .end (err, res) ->
-      agent[action] url
+      req = agent[action] url
         .set 'X-Requested-With', 'XMLHttpRequest'
+      req.send options.data if options.data
+      req
         .expect 'Content-Type', /json/
         .expect test
         .expect options.status or 200, done
