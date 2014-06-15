@@ -6,6 +6,7 @@
 #
 # Define our min configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Reads HTML for usemin blocks to enable smart builds that automatically

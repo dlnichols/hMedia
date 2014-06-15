@@ -6,6 +6,7 @@
 #
 # Test helper to run tests as an authenticated user
 ###
+'use strict'
 
 # External libs
 supertest = require 'supertest'

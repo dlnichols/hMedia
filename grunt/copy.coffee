@@ -6,6 +6,7 @@
 #
 # Define our copy configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Copy pre-processed files from app to dist

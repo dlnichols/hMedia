@@ -6,6 +6,8 @@
 #
 # Wrapper for blanket.js
 ###
+'use strict'
+
 require('blanket')(
   #pattern: /\/h_media\/(test\/lib|lib)\//
   pattern: 'lib'

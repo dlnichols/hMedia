@@ -6,6 +6,7 @@
 #
 # Define our rev configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Renames files for browser caching purposes

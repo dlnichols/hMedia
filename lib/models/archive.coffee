@@ -22,7 +22,9 @@ debug    = require('debug') 'hMedia:models:archive'
 debug 'Loading archive model...'
 
 ArchiveSchema = new mongoose.Schema(
-  glacierId: String
+  glacierId:
+    type  : String
+    unique: true
   glacierDescription: String
 )
 

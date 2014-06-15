@@ -6,6 +6,7 @@
 #
 # Define our less configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Compile LESS to CSS

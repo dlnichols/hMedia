@@ -6,6 +6,7 @@
 #
 # Define our coffee configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Compile Coffee to JS

@@ -6,6 +6,7 @@
 #
 # Define our open configuration block for grunt
 ###
+'use strict'
 
 # External libs
 path = require 'path'

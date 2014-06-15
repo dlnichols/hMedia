@@ -22,10 +22,7 @@ module.exports = (grunt) ->
   require('jit-grunt') grunt,
     express: 'grunt-express-server'
     useminPrepare: 'grunt-usemin'
-
-  # Load custom tasks
-  # TODO: DB tasks need to be refactored to work with JIT
-  #require('./lib/tasks/database') grunt
+    db: 'grunt/database.coffee'
 
   # Load Grunt config
   # TODO: Fork load-grunt-config and make it JIT for configs?

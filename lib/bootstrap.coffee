@@ -1,5 +1,5 @@
 ###
-# bootstrap.coffee
+# lib/bootstrap.coffee
 #
 # © 2014 Dan Nichols
 # See LICENSE for more details
@@ -7,6 +7,7 @@
 # Load mongo, the env, and connect to mongo
 # Also, returns the env
 ###
+'use strict'
 
 # External libs
 mongoose = require 'mongoose'

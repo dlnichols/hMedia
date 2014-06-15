@@ -7,6 +7,7 @@
 # This module loads and merges all JSON in the secrets folder and places them
 # in the env for the application to use
 ###
+'use strict'
 
 # External libs
 _ = require 'lodash'

@@ -6,6 +6,7 @@
 #
 # Define our express configuration block for grunt
 ###
+'use strict'
 
 # Internal libs
 env = require '../lib/config/environment'

@@ -26,7 +26,9 @@ debug 'Loading user model...'
 
 UserSchema = new mongoose.Schema(
   name: String
-  email: String
+  email:
+    type  : String
+    unique: true
   confirmedEmail: String
   role:
     type   : String

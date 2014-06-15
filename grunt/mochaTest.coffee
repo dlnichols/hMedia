@@ -6,6 +6,7 @@
 #
 # Define our mochaTest configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   test:

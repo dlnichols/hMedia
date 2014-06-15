@@ -1,3 +1,13 @@
+###
+# test/karma.conf.coffee
+#
+# © 2014 Dan Nichols
+# See LICENSE for more details
+#
+# Configure karma
+###
+'use strict'
+
 module.exports = (config) ->
   config.set
     basePath: '..'

@@ -59,7 +59,7 @@ describe 'Helper - Factory', ->
       expect(attrs).to.be.instanceof Object
 
     it 'should pass attributes when called asynchronously', ->
-      Factory.attributesFor 'static', (attrs) ->
+      Factory.attributesFor 'static', (err, attrs) ->
         expect(attrs).to.exist
         expect(attrs).not.to.be.instanceof Static
         expect(attrs).to.be.instanceof Object
@@ -101,7 +101,7 @@ describe 'Helper - Factory', ->
       expect(model).to.be.instanceof Static
 
     it 'should pass the model when call asynchronously', (done) ->
-      Factory.build 'static', (model) ->
+      Factory.build 'static', (err, model) ->
         expect(model).to.exist
         expect(model).to.be.instanceof Static
         done()
@@ -126,7 +126,7 @@ describe 'Helper - Factory', ->
       expect(model).to.be.instanceof Static
 
     it 'should pass the model when call asynchronously', (done) ->
-      Factory.create 'static', (model) ->
+      Factory.create 'static', (err, model) ->
         expect(model).to.exist
         expect(model).to.be.instanceof Static
         done()

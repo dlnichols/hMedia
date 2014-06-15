@@ -6,6 +6,7 @@
 #
 # Define our watch configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Watch settings

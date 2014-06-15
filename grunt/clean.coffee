@@ -6,6 +6,7 @@
 #
 # Define our clean configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   build: [

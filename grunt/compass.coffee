@@ -6,6 +6,7 @@
 #
 # Define our compass configuration block for grunt
 ###
+'use strict'
 
 module.exports =
   # Compiles Sass to CSS

@@ -27,7 +27,7 @@ modelsPath = path.join __dirname, 'models'
 requireModel = (moduleName, context) ->
   return unless moduleName?
   return unless /^(.*)\.(js|coffee)$/.test moduleName
-  return unless fs.existsSync(moduleName)
+  return unless fs.existsSync moduleName
   exportName = _s.capitalize(path.basename(moduleName).split('.')[0])
   debug 'Loading ' + exportName + ' from ' + moduleName + '...'
   module = require moduleName
@@ -39,6 +39,6 @@ requireModel = (moduleName, context) ->
 module.exports = (context) ->
   models = context or {}
   debug 'Loading models...'
-  files = fs.readdirSync(modelsPath)
+  files = fs.readdirSync modelsPath
   requireModel path.join(modelsPath, file), models for file in files
   models

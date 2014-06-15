@@ -11,6 +11,7 @@
 # available in the context via their model name).  We also provide some
 # convenient helper methods.
 ###
+'use strict'
 
 loadLib = (libName, context) ->
   context[libName] = require(libName)

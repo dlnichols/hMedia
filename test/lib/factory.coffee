@@ -9,12 +9,16 @@
 #
 # TODO: More descriptive
 ###
+'use strict'
 
 # External libs
 _       = require 'lodash'
 fs      = require 'fs'
 path    = require 'path'
 deasync = require 'deasync'
+
+# Internal libs
+require '../../lib/bootstrap'
 
 # Store our factory definitions here
 factories = {}
@@ -90,7 +94,7 @@ attributesFor = (name, attributes, callback) ->
         newAttrs[key] = fn()
 
   if callback
-    callback newAttrs
+    callback null, newAttrs
   else
     newAttrs
 
@@ -118,7 +122,7 @@ build = (name, attributes, callback) ->
 
   # Call the callback with the new model
   if callback
-    callback model
+    callback null, model
   else
     model
 
@@ -139,8 +143,7 @@ create = (name, attributes, callback) ->
   model = build name, attributes
   if callback
     model.save (err) ->
-      throw err if err
-      callback(model)
+      callback err, model
     null
   else
     # Deasync
@@ -159,7 +162,8 @@ create = (name, attributes, callback) ->
 ###
 assoc = (name, attr) ->
   (callback) ->
-    create name, (model) ->
+    create name, (err, model) ->
+      throw err if err
       if attr
         callback model[attr]
       else
