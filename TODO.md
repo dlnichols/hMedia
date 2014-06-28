@@ -20,9 +20,6 @@ Server
 * Already seeing some non-DRY stuff in models
   * Procedural generation of models?
   * Possible abstraction of validations?
-* Finish cleaning up the models and controllers
-  * The stuff from Yeoman was a mess, but did give a decent starting point for
-    learning how to interact with MongooseJS
 * Add some basic user features
   * User confirmation
   * Lock account on sign in failure attempts
