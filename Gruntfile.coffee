@@ -56,6 +56,10 @@ module.exports = (grunt) ->
     ]
     null
 
+  grunt.registerTask 'assets', [
+    'concurrent:serve'
+  ]
+
   grunt.registerTask 'build', [
     'clean:build'
     'useminPrepare'    # prep concat/*min blocks

@@ -1,7 +1,0 @@
-<div ng-controller="notificationsController" class="alertbox">
-  <div ng-repeat="notice in notices" class="alert" ng-class="style(notice.type)">
-    <button type="button" class="close" ng-click="close($index)">&times;</button>
-    <h4>{{notice.title}}</h4>
-    <strong>{{notice.strong}}</strong> {{notice.message}}
-  </div>
-</div>

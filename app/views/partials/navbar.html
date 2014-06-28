@@ -12,14 +12,7 @@
     </div><!--/.navbar-header-->
 
     <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed=true">
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
-          <a class="dropdown-toggle">Themes <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="style in styles"><a ng-click="changeStyle(style)">{{style}}</a></li>
-          </ul>
-        </li>
-      </ul>
+      <styler></styler>
 
       <!--User is signed in, show menu-->
       <div ng-show="isSignedIn()">
@@ -45,38 +38,10 @@
 
       <!--User is not signed in, show sign in controls-->
       <div ng-hide="isSignedIn()">
-        <form class="navbar-form navbar-right" name="loginForm">
-          <div class="form-group">
-            <input type="email"
-                   name="email"
-                   class="form-control input-sm"
-                   placeholder="Email"
-                   ng-model="user.email"
-                   ng-disabled="isProcessing"
-                   required>
-          </div>
-          <div class="form-group">
-            <input type="password"
-                   name="password"
-                   class="form-control input-sm"
-                   placeholder="Password"
-                   ng-model="user.password"
-                   ng-disabled="isProcessing"
-                   required>
-          </div>
-          <button type="submit"
-                  class="btn btn-sm btn-success"
-                  ng-click="login('local', loginForm)"
-                  ng-disabled="isProcessing || !loginForm.$valid">Log in</button>
-          <button type="button"
-                  class="btn btn-sm btn-success"
-                  ng-click="createAccount('local', loginForm)"
-                  ng-disabled="isProcessing || !loginForm.$valid">Sign up</button>
-          <button type="button"
-                  class="btn btn-sm btn-link"
-                  ng-click="createAccount('local', loginForm)"
-                  ng-disabled="isProcessing || !loginForm.$valid">Join</button>
-        </form><!--/.navbar-form-->
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/sign_in">Log in</a></li>
+          <li><a href="/register">Register</a></li>
+        </ul>
       </div><!--/.ng-switch-default-->
 
     </div><!--/.navbar-collapse-->
