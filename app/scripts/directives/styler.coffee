@@ -57,9 +57,9 @@ angular.module 'hMediaApp'
   restrict: 'E'
   template: '\
 <ul class="nav navbar-nav">
-  <li class="dropdown">
-    <a class="dropdown-toggle">Themes <b class="caret"></b></a>
-    <ul class="dropdown-menu">
+  <li dropdown>
+    <a dropdown-toggle>Themes <b class="caret"></b></a>
+    <ul>
       <li ng-repeat="style in styles"><a ng-click="changeStyle(style)">{{style}}</a></li>
     </ul>
   </li>

@@ -11,6 +11,14 @@ angular.module 'hMediaApp'
   # Collapse stuff by default
   $scope.navCollapsed = true
 
+  $scope.toggleMenu = ->
+    $scope.navCollapsed = !$scope.navCollapsed
+    return
+
+  $scope.collapseMenu = ->
+    $scope.navCollapsed = true
+    return
+
   # We are not processing on start up
   $scope.isProcessing = false
 
