@@ -14,9 +14,33 @@ angular.module 'hMediaApp', [
   'ngSanitize'
   'ngRoute'
   'ngAnimate'
+  'ui.router'
 ]
 
-.config ($routeProvider, $locationProvider, $httpProvider) ->
+.controller 'menuController', ($scope, $state) ->
+  $scope.isActive = (state) ->
+    state is $state.current.name
+
+.config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
+  # Send unmatched URLs to root
+  $urlRouterProvider.otherwise '/'
+
+  # Basic application routes
+  $stateProvider
+    .state 'index',
+      abstract:    true
+      templateUrl: 'partials/menu'
+      controller:  'menuController'
+    .state 'index.welcome',
+      url:         '/'
+      templateUrl: 'partials/menu/welcome'
+    .state 'index.dashboard',
+      url:         '/dashboard'
+      templateUrl: 'partials/menu/dashboard'
+    .state 'index.debug',
+      url:         '/debug'
+      templateUrl: 'partials/menu/debug'
+
   # Use the HTML5 history API
   $locationProvider.html5Mode true
 

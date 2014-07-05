@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="navbarController">
+<nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="navbarController">
   <div class="container">
     <!--When our view is too small, all the menus and things collapse down to this button-->
     <div class="navbar-header">
@@ -34,7 +34,7 @@
           <li><a class="btn btn-link" href="/settings">{{currentUser()}}</a></li>
           <li><a class="btn btn-link" ng-click="logout()">Log out</a></li>
         </ul>
-      </div><!--/.ng-switch-when-->
+      </div>
 
       <!--User is not signed in, show sign in controls-->
       <div ng-hide="isSignedIn()">
@@ -42,8 +42,8 @@
           <li><a href="/sign_in">Log in</a></li>
           <li><a href="/register">Register</a></li>
         </ul>
-      </div><!--/.ng-switch-default-->
+      </div>
 
     </div><!--/.navbar-collapse-->
   </div>
-</div><!--/.navbar-->
+</nav>

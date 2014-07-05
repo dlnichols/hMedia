@@ -9,10 +9,6 @@ Client
 ------
 * Fix login/logout/update to work with the updates to the server code
 * Make a way to dynamically create a top menu, based on the current user's role
-  than ngInclude)
-* tabsetController allows animating in... Animating out will require a bit
-  more restructuring... (fixed positioned div? use of $animate and callback?)
-* Make notifications fade after a short period of time (5s? 15s?)
 
 Server
 ------
