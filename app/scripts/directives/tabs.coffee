@@ -7,7 +7,6 @@
 'use strict'
 
 angular.module 'hMediaApp'
-
 .controller 'tabsetController', ($scope, $state) ->
   ctrl = @
   tabs = ctrl.tabs = $scope.tabs = []

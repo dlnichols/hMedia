@@ -126,12 +126,6 @@ angular.module 'hMediaApp'
 
     element.bind 'click', toggleDropdown
 
-    # WAI-ARIA
-    element.attr 'aria-haspopup': true, 'aria-expanded': false
-    scope.$watch dropdownCtrl.isOpen, (isOpen) ->
-      element.attr 'aria-expanded', !!isOpen
-      return
-
     scope.$on '$destroy', ->
       element.unbind 'click', toggleDropdown
       return

@@ -39,8 +39,8 @@
       <!--User is not signed in, show sign in controls-->
       <div ng-hide="isSignedIn()">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/sign_in">Log in</a></li>
-          <li><a href="/register">Register</a></li>
+          <li><a ui-sref="auth.sign_in">Log in</a></li>
+          <li><a ui-sref="auth.register">Register</a></li>
         </ul>
       </div>
 

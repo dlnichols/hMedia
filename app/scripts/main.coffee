@@ -40,11 +40,21 @@ angular.module 'hMediaApp', [
     .state 'index.debug',
       url:         '/debug'
       templateUrl: 'partials/menu/debug'
+    .state 'auth',
+      abstract:    true
+      url:         '/auth'
+      template:    '<ui-view></ui-view>'
+    .state 'auth.sign_in',
+      url:         '/sign_in'
+      templateUrl: 'partials/auth/sign_in'
+    .state 'auth.register',
+      url:         '/register'
+      templateUrl: 'partials/auth/register'
 
   # Use the HTML5 history API
   $locationProvider.html5Mode true
 
-  # Intercept 401s and redirect you to login
+  # Intercept 401 and redirect to login
   $httpProvider.interceptors.push ($q, $location) ->
     return responseError: (response) ->
       if response.status == 401

@@ -59,7 +59,7 @@ angular.module 'hMediaApp'
 <ul class="nav navbar-nav">
   <li dropdown>
     <a dropdown-toggle>Themes <b class="caret"></b></a>
-    <ul>
+    <ul class="dropdown-menu">
       <li ng-repeat="style in styles"><a ng-click="changeStyle(style)">{{style}}</a></li>
     </ul>
   </li>
