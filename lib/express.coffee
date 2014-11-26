@@ -60,7 +60,7 @@ module.exports = exports = (app) ->
   app.use cookies()
 
   # Persist sessions with mongo
-  app.use session \
+  app.use session {
     secret: env.secrets.session
     store: new mongo(
       url: env.mongo.uri
@@ -68,6 +68,9 @@ module.exports = exports = (app) ->
     , ->
       debug 'Mongo connection for session storage open.'
     )
+    resave: false
+    saveUninitialized: false
+  }
 
   # Load passport
   app.use passport.initialize()

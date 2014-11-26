@@ -17,6 +17,6 @@ Factory.define 'archive', Archive,
   glacierId: ->
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   glacierDescription: ->
-    Faker.Lorem.paragraph()
+    Faker.lorem.paragraph()
 
 module.exports = Factory

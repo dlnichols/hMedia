@@ -34,22 +34,26 @@ module.exports = exports =
         return next(err) if err
         req.logIn user, (err) ->
           return next(err) if err
-          res.json 200, req.user.userInfo
+          res.status 200
+             .json req.user.userInfo
 
   ###
   # index
   ###
   index: (req, res, next) ->
-    res.json 501, error: 'User::Index not implemented.'
+    res.status 501
+       .json 501, error: 'User::Index not implemented.'
 
   ###
   # show
   ###
   show: (req, res, next) ->
     if req.params.id
-      res.json 501, error: 'User::Show(id) not implemented.'
+      res.status 501
+         .json error: 'User::Show(id) not implemented.'
     else
-      res.json 200, req.user.userInfo
+      res.status 200
+         .json req.user.userInfo
 
   ###
   # update
@@ -58,12 +62,14 @@ module.exports = exports =
   ###
   update: (req, res, next) ->
     if req.params.id
-      res.json 501, error: 'User::Update(id) not implemented.'
+      res.status 501
+         .json error: 'User::Update(id) not implemented.'
     else
       req.user.safeAssign req.body
       req.user.save (err, user) ->
         return next(err) if err
-        res.json 200, req.user.userInfo
+        res.status 200
+           .json req.user.userInfo
 
   ###
   # delete
@@ -73,11 +79,14 @@ module.exports = exports =
   delete: (req, res, next) ->
     # Check that the user password matches
     unless req.body.password and req.user.authenticate req.body.password
-      return res.json 401, error: 'Incorrect password'
+      res.status 401
+         .json error: 'Incorrect password'
+      return
 
     # Delete the user from the database
     req.user.remove (err, user) ->
       return next(err) if err
       # Deleted, log them out
       req.logOut()
-      res.json 200, {}
+      res.status 200
+         .json {}

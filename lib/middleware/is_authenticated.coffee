@@ -24,4 +24,5 @@ module.exports = exports =
     if req.isAuthenticated()
       next()
     else
-      res.json 401, error: 'Not logged in'
+      res.status 401
+         .json error: 'Not logged in'

@@ -20,7 +20,7 @@ Factory.define 'user', User,
   email: ->
     'test' + emailCounter++ + '@test.com'
   password: ->
-    Faker.Lorem.words().join ''
+    Faker.lorem.words().join ''
   providers: [ 'local' ]
   role: 'guest'
 

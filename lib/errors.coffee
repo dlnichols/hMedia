@@ -24,9 +24,10 @@ module.exports = exports = (app) ->
   # Validation errors
   validationError = (err, req, res, next) ->
     if err.name is 'ValidationError'
-      res.json 400,
-        error: err.message
-        error_messages: err.errors
+      res.status 400
+         .json
+           error: err.message
+           error_messages: err.errors
     else
       next err
 
@@ -48,7 +49,8 @@ module.exports = exports = (app) ->
       _.forOwn err, (value, key, object) ->
         debug key + ': ' + value
       debug 'Uncaught error:\n' + err.stack
-    res.json 500, error: err.stack
+    res.status 500
+       .json error: err.stack
 
   app.use validationError
   app.use notFound
