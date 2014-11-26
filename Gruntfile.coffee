@@ -46,21 +46,19 @@ module.exports = (grunt) ->
     ), 1000
     return
 
-  grunt.registerTask 'serve', (target) ->
-    grunt.task.run [
-      #'concurrent:serve'
-      'express:dev'
-      'wait'
-      'open:serve'
-      'watch'
-    ]
-    null
+  grunt.registerTask 'serve', [
+    #'concurrent:serve'
+    'express:dev'
+    'wait'
+    'open:serve'
+    'watch'
+  ]
 
-  grunt.registerTask 'assets', [
+  grunt.registerTask 'assets', 'Build assets.', [
     'concurrent:serve'
   ]
 
-  grunt.registerTask 'build', [
+  grunt.registerTask 'build', 'Prepare for deployment.', [
     'clean:build'
     'useminPrepare'    # prep concat/*min blocks
     'concurrent:build' # compass/less/coffee+image/svg/htmlmin
@@ -73,11 +71,11 @@ module.exports = (grunt) ->
     'usemin'
   ]
 
-  grunt.registerTask 'test', [
+  grunt.registerTask 'test', 'Run tests.', [
     'mochaTest'
   ]
 
-  grunt.registerTask 'default', [
+  grunt.registerTask 'default', 'Does nothing.', [
   ]
 
   return
