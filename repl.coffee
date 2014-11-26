@@ -27,6 +27,11 @@ loadEnv = (context) ->
   require('./lib/models') context
   context.Factory = require('./test/lib/factory')
 
+  # Set up callback for error
+  context.mongoose.connection.on 'error', (err) ->
+    console.log 'Could not connect to mongo server.'
+    return
+
   # Connect to mongo
   context.mongoose.connect context.env.mongo.uri, context.env.mongo.options
 
