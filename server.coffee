@@ -17,11 +17,13 @@
 require 'coffee-script/register'
 
 # Load the environment
-env = require './lib/bootstrap'
+env = require './lib/config/environment'
 
 # External libs
-mongoose = require 'mongoose'
 app      = require('express')()
+
+# Bootstrap mongoose
+require('./lib/bootstrap') env
 
 # Load models
 require('./lib/models') env

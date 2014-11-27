@@ -4,18 +4,25 @@
 # © 2014 Dan Nichols
 # See LICENSE for more details
 #
-# Load mongo, the env, and connect to mongo
-# Also, returns the env
+# This module bootstraps our mongo connection
 ###
 'use strict'
 
 # External libs
 mongoose = require 'mongoose'
+debug    = require('debug') 'hMedia:bootstrap'
 
-# Internal libs
-env = require './config/environment'
+module.exports = exports = (env) ->
+  # Print connected message
+  mongoose.connection.on 'open', ->
+    debug 'Connected to mongo.'
 
-# Connect to mongoDB
-mongoose.connect env.mongo.uri, env.mongo.options unless mongoose.connection.readyState > 0
+  # Handle errors
+  mongoose.connection.on 'error', (err) ->
+    debug 'Unable to connect to mongo: ' + err
 
-module.exports = env
+  unless mongoose.connection.readyState > 0
+    debug 'Connecting to mongo: ' + env.mongo.uri
+    mongoose.connect env.mongo.uri, env.mongo.options
+  else
+    debug 'Mongoose already connected.'

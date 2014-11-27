@@ -17,9 +17,6 @@ fs      = require 'fs'
 path    = require 'path'
 deasync = require 'deasync'
 
-# Internal libs
-require '../../lib/bootstrap'
-
 # Store our factory definitions here
 factories = {}
 

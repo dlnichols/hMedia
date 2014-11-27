@@ -12,7 +12,6 @@
 expect = require('chai').expect
 
 # Internal libs
-require '../../../lib/bootstrap'
 Factory = require '../../lib/factory'
 User    = require '../../../lib/models/user'
 
