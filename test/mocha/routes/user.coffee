@@ -95,7 +95,7 @@ describe '(Routes - User)', ->
             email: user2.email
           )
           LoginAs user, 'put', '/user', done, status: 400, data: updates, (res) ->
-            expect(res.body.error).to.eql 'Validation failed'
+            expect(res.body.error).to.eql 'User validation failed'
             expect(res.body.error_messages).to.exist
             expect(res.body.error_messages).to.have.property 'email'
             expect(res.body.error_messages.email).to.have.property 'message'

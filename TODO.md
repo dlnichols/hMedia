@@ -1,4 +1,4 @@
-Tasks for v0.0.1
+Tasks for v0.0.4
 ================
 First step in the process is to create a skeleton application that will provide
 a good starting point.  This will include basic user functionality, and a basic
