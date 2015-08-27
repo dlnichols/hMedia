@@ -20,9 +20,13 @@ module.exports = (user, action, url, done, options, test) ->
     options = {}
 
   agent = supertest.agent app
+  if user is null
+    user = {}
+  else
+    user = email: user.email, password: user.password
   agent.post '/auth'
     .set 'X-Requested-With', 'XMLHttpRequest'
-    .send email: user.email, password: user.password
+    .send user
     .expect 200
     .end (err, res) ->
       req = agent[action] url

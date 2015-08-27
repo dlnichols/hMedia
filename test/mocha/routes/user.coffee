@@ -47,13 +47,9 @@ describe '(Routes - User)', ->
 
     describe 'GET /user', (done) ->
       describe 'when not authenticated', ->
-        getUser = null
-        beforeEach ->
-          getUser = request.get '/user'
-            .set 'X-Requested-With', 'XMLHttpRequest'
-
         it 'should return an error', (done) ->
-          getUser
+          request.get '/user'
+            .set 'X-Requested-With', 'XMLHttpRequest'
             .expect 'Content-Type', /json/
             .expect 401, error: 'Not logged in', done
 
